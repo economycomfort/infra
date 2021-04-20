@@ -1,0 +1,16 @@
+{{ ansible_managed | comment }}
+
+auto {{ item.name }}
+allow-hotplug {{ item.name }}
+{% if item.dhcp is true %}
+iface {{ item.name }} inet dhcp
+{% else %}
+iface {{ item.name }} inet static
+    address {{ item.ip }}
+{% if item.gateway is defined %}
+	gateway {{ item.gateway }}
+{% endif %}
+{% endif %}
+{% if item.mtu is defined %}    
+    mtu 9000
+{% endif %}

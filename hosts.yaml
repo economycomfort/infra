@@ -1,0 +1,29 @@
+# Host inventory for ansible-managed hosts.
+# Make sure the ansible_user and ssh key exists on each host.
+#
+# For more context, see: 
+# https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html
+#
+all:
+  hosts:
+    # proxmox
+    proxmox:
+      ansible_host: 192.168.1.10
+  
+  children:
+    # ansible test VMs
+    test:
+      hosts:
+        ansible1:
+          ansible_host: 192.168.1.141
+          ansible_python_interpreter: /usr/bin/python3
+      vars:
+        ansible_user: ansible
+    
+    # prod hosts
+    srv:
+      hosts:
+        chunky:
+          ansible_host: 192.168.1.200
+        homebridge:
+          ansible_host: 192.168.1.201

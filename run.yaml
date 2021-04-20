@@ -1,0 +1,104 @@
+---
+  - hosts: all
+    #vars_files:
+    #  - "vars/all.yaml"
+    roles:
+    tasks:
+     # Removes Ubuntu MOTD spam
+     - name: Remove Ubuntu MOTD spam
+       become: yes
+       ansible.builtin.file:
+         path: "/etc/update-motd.d/{{ item }}"
+         state: absent
+       loop:
+         - 80-livepatch
+         - 95-hwe-eol
+         - 10-help-text
+         - 50-motd-news
+       when: ansible_distribution == "Ubuntu"
+
+     - name: Remove Debian MOTD legalese
+       become: yes
+       ansible.builtin.file:
+         path: "/etc/motd"
+         state: absent
+       when: ansible_distribution == "Debian"
+  
+
+  #################
+  ###  proxmox  ###
+  #################
+  - hosts: proxmox
+    roles:
+      - role: dab-figurine
+      - role: ironicbadger.ansible_role_proxmox_nag_removal
+    tasks:
+      # Passes through primary user to be able to log in to web interface.
+      # Needs a user created (probably david) and passwordless sudo.
+      - name: Add proxmox web interface users
+        become: yes
+        template:
+          src: "proxmox/user.cfg.j2"  # relative to main playbook dir
+          dest: "/etc/pve/user.cfg"
+
+
+  ################
+  ###  chunky  ###
+  ################
+  - hosts: chunky
+    vars_files:
+      - 'vars/vault.yaml'
+    pre_tasks:
+      # Seemingly not worth writing a whole role to manage ZFS on one host.
+      # Ideally, just mount these pools mannually before running playbook.
+      # If all the datasets are gone from ZFS, there's bigger problems.
+      - name: Ensure ZFS pool(s) are imported and mounted before proceeding
+        ansible.builtin.command:
+          cmd: "zpool list {{ item.name }} >/dev/null"
+        loop: "{{ zfs_pools }}"
+      
+      # On the storage host, we're using an alternate path for /home.
+      # The following tasks create a symlink for continuity.
+      - name: Making sure /mnt/tank/home exists
+        ansible.builtin.stat:
+          path: /mnt/tank/home
+        register: tankhome
+      
+      - name: Discovering facts about /home
+        ansible.builtin.stat:
+          path: /home
+        register: oldhome
+      
+      # These commands must be combined; if not, our users $HOME will
+      # be absent and subsequent SSH connections in the playbook will fail.
+      - name: Move old /home out of the way and symlink /mnt/tank/home
+        ansible.builtin.shell: 
+          cmd: "mv /home /home.orig && ln -sf /mnt/tank/home /home"
+        when: 
+          - tankhome.stat.exists == True
+          - oldhome.stat.islnk == False
+    
+    roles:
+      #- role: dab-networking
+      #- role: dab-figurine
+      #- role: grog.package
+      #- role: bertvv.samba
+      #- role: geerlingguy.docker
+      - role: dab-storage
+
+
+  ####################
+  ###  homebridge  ###
+  ####################
+  - hosts: homebridge
+    vars_files:
+      - 'vars/vault.yaml'
+    tasks:
+    roles:
+      #- role: dab-networking
+      #- role: dab-figurine
+      #- role: ironicbadger.ansible_users
+      #- role: grog.package
+      #- role: geerlingguy.docker
+      #- role: dab-gitrepos
+      - role: dab-zsh

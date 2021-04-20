@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+{{ ansible_managed | comment }}
+
+echo ""
+/usr/local/bin/figurine -f "3d.flf" {{ figurine_name | default('`hostname`') }}
+echo ""

@@ -1,0 +1,9 @@
+---
+
+- name: Run git post-commands
+  ansible.builtin.shell:
+    cmd: "{{ item.postcmd }}"
+  loop: "{{ gitrepos }}"
+  when: item.postcmd is defined
+
+

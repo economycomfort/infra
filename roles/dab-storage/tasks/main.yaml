@@ -1,0 +1,98 @@
+---
+## Manages tasks involving mounting drives and defining mountpoints.
+## 
+## Assumptions:
+## - the disks are already formatted and contain data (example: new VM + passthough LSI)
+## - disks aren't already mounted, and mountpoints will be created.
+## - information about disks and mountpoints defined as lists of dicts:
+##   - data_disks
+##   - parity_disks
+##   - bind_mounts
+##   - fstab_mergerfs
+##   - nfs_mounts
+##
+
+# This is ugly, but avoids a lot of conditionals later.
+# Idea is that all these lists may not be defined, so this flattens the existing lists
+# into one big list-of-dicts (mountpoints).
+- name: Reticulating splines
+  ansible.builtin.set_fact:
+    mountpoints: 
+      "{{ data_disks | default([]) \
+      + parity_disks | default([]) \
+      + fstab_mergerfs | default([]) \
+      + bind_mounts | default([]) \
+      + nfs_mounts | default([]) }}" 
+  tags:
+    - mountpoints
+
+- name: Create mountpoints
+  ansible.builtin.file:
+    dest: "{{ item.mountpoint }}"
+    state: directory
+    owner: nobody
+    group: nogroup
+    mode: 0777
+  loop: "{{ mountpoints }}"
+  when: item.mountpoint is defined
+  tags:
+    - disks
+    - mountpoints
+
+- name: Mount physical disks
+  ansible.builtin.mount:
+    name: "{{ item.mountpoint }}"
+    src: "/dev/disk/by-id/{{ item.diskbyid }}"
+    fstype: "{{ item.fstype }}"
+    opts: "{{ item.opts | default('defaults') }}"
+    # change to 'present' to skip auto-mount
+    state: "{{ item.state | default('mounted') }}"
+  loop: "{{ mountpoints }}"
+  when: 
+    - item.mountpoint != '/mnt/storage'
+    - item.diskbyid is defined
+  tags:
+    - disks
+    - mountpoints
+
+- name: Mount NFS shares
+  ansible.builtin.mount:
+    name: "{{ item.mountpoint }}"
+    src: "{{ item.src }}"
+    fstype: nfs
+    opts: "{{ item.opts | default('rw,sync,hard,intr') }}"
+    # change to 'present' to skip auto-mount
+    state: "{{ item.state | default('mounted') }}"
+  loop: "{{ nfs_mounts }}"
+  when: nfs_mounts is defined
+  tags:
+    - nfs
+    - mountpoints
+
+- name: Mount mergerfs array
+  ansible.builtin.mount:
+    name: "{{ item.mountpoint }}"
+    src: "{{ item.src }}"
+    fstype: fuse.mergerfs
+    opts: "{{ item.opts }}"
+    # change to 'present' to skip auto-mount
+    state: "{{ item.state | default('mounted') }}"
+  loop: "{{ fstab_mergerfs }}"
+  when: fstab_mergerfs is defined
+  tags:
+    - mergerfs
+    - mountpoints
+
+- name: Create bind mounts
+  ansible.builtin.mount:
+    name: "{{ item.mountpoint }}"
+    src: "{{ item.src }}"
+    fstype: none
+    opts: bind
+    # change to 'present' to skip auto-mount
+    state: "{{ item.state | default('mounted') }}"
+  loop: "{{ bind_mounts }}"
+  when: bind_mounts is defined
+  tags:
+    - bindfs
+    - mountpoints

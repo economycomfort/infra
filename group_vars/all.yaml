@@ -1,0 +1,8 @@
+---
+# generic settings
+main_username: david
+main_groupname: "{{ main_username }}"
+main_uid: "1001"
+main_gid: "{{ main_uid }}"
+docker_gid: 678
+

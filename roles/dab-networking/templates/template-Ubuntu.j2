@@ -1,0 +1,21 @@
+{{ ansible_managed | comment }}
+
+network:
+  ethernets:
+    {{ item.name }}:
+{% if item.dhcp is true %}
+      dhcp4: true
+{% else %}
+      addresses:
+        - {{ item.ip }}
+{% if item.gateway is defined %}
+      gateway4: {{ item.gateway }}
+{% endif %}
+      nameservers:
+        addresses: {{ item.dns | default('[]') }}
+        search: {{ item.domain | default('[]') }}
+{% endif %}
+{% if item.mtu is defined %}
+      mtu: {{ item.mtu }}
+{% endif %}
+  version: 2

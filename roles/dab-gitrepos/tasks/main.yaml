@@ -1,0 +1,39 @@
+---
+## Clones defined git repos (see 'gitrepos' variables)
+
+- name: Clear any destination directories if overwrite=yes
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ gitrepos }}"
+  when: 
+    - item.overwrite is defined
+    - item.overwrite == True
+
+- name: Clone repositories
+  ansible.builtin.git:
+    repo: "{{ item.url }}"
+    dest: "{{ item.path }}"
+    force: "{{ item.overwrite | default('no') }}"
+  vars: 
+    ansible_become: "{{ item.become | default('no') }}"
+  loop: "{{ gitrepos }}"
+
+- name: Change ownership if UID/GID is defined
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ item.uid }}"
+    group: "{{ item.gid }}"
+    recurse: yes
+  loop: "{{ gitrepos }}"
+  when: 
+    - item.uid is defined
+    - item.gid is defined
+
+- name: Run git post-commands
+  ansible.builtin.shell:
+    cmd: "{{ item.postcmd }}"
+  vars:
+    ansible_become: "{{ item.become | default('no') }}"
+  loop: "{{ gitrepos }}"
+  when: item.postcmd is defined

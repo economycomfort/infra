@@ -1,0 +1,15 @@
+---
+# Mostly this is handled via geerlingguy.nfs and geerlingguy.samba.
+# However, a few things may need to be done outside of that.
+
+# preferably run this before the geerlingguy.samba role,
+# otherwise you'll need to restart smbd.
+#- name: copy samba configuration file
+#  ansible.builtin.template:
+#    src: smb.conf.j2
+#    dest: /etc/samba/smb.conf
+#    owner: root
+#    group: root
+#    mode: '0644'
+#    backup: yes
+

@@ -7,4 +7,5 @@ and by nature will probably never be "complete."
 Evolved from the work of [Alex Kretzschmar](https://github.com/ironicbadger).
 His various blog posts about using Ansible convinced me to give it a whirl.
 
-
+Hopefully somebody else finds this useful.  Note that most things are specific
+to my environment, and will likely need to be modified for deplpyment elsewhere.

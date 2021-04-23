@@ -11,4 +11,4 @@ since I was an every-day-sysadmin over a decade ago, so it's enriching to learn
 a bit about how things are handled and scaled out today.
 
 Hopefully somebody else finds this useful.  Note that most things are specific
-to my environment, and will likely need to be modified for deplpyment elsewhere.
+to my environment, and will likely need to be modified for deployment elsewhere.

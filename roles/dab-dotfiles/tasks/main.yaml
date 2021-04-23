@@ -1,0 +1,22 @@
+---
+## Handles installing various dotfiles.
+
+- name: Clone zerobaud/dotfiles repo from Github
+  ansible.builtin.git:
+    repo: "{{ dotfiles_repo }}"
+    dest: "{{ dotfiles_dest }}"
+    force: yes
+    recursive: "{{ dotfiles_recursive | default('yes') }}"
+  vars: 
+    ansible_become: "{{ dotfiles_become | default('no') }}"
+
+- name: Run dotfiles bootstrap script
+  ansible.builtin.shell:
+    cmd: "{{ dotfiles_bootstrap }}"
+  vars:
+    ansible_become: "{{ dotfiles_become | default('no') }}"
+
+- name: Determine zsh location
+  ansible.builtin.user:
+    name: "{{ main_username }}"
+    shell: "{{ lookup('pipe', 'which zsh') }}"

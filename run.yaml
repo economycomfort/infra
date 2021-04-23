@@ -101,4 +101,4 @@
       #- role: grog.package
       #- role: geerlingguy.docker
       #- role: dab-gitrepos
-      - role: dab-zsh
+      - role: dab-dotfiles

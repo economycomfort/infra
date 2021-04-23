@@ -1,0 +1,5 @@
+dotfiles_repo: https://github.com/zerobaud/dotfiles.git
+dotfiles_dest: ${HOME}/git/dotfiles
+dotfiles_recursive: yes
+dotfiles_bootstrap: "{{ dotfiles_dest }}/bootstrap.sh -y"
+#dotfiles_become: yes

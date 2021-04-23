@@ -79,12 +79,13 @@
           - oldhome.stat.islnk == False
     
     roles:
-      #- role: dab-networking
-      #- role: dab-figurine
-      #- role: grog.package
-      #- role: bertvv.samba
-      #- role: geerlingguy.docker
+      - role: dab-networking
+      - role: dab-figurine
+      - role: grog.package
+      - role: dab-dotfiles
       - role: dab-storage
+      - role: geerlingguy.docker
+      - role: bertvv.samba
 
 
   ####################
@@ -95,10 +96,10 @@
       - 'vars/vault.yaml'
     tasks:
     roles:
-      #- role: dab-networking
-      #- role: dab-figurine
-      #- role: ironicbadger.ansible_users
-      #- role: grog.package
-      #- role: geerlingguy.docker
-      #- role: dab-gitrepos
+      - role: dab-networking
+      - role: dab-figurine
+      - role: ironicbadger.ansible_users
+      - role: grog.package
+      - role: geerlingguy.docker
       - role: dab-dotfiles
+      #- role: dab-gitrepos

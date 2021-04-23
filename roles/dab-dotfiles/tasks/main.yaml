@@ -16,7 +16,7 @@
   vars:
     ansible_become: "{{ dotfiles_become | default('no') }}"
 
-- name: Determine zsh location
+- name: Make zsh default shell
   ansible.builtin.user:
     name: "{{ main_username }}"
     shell: "{{ lookup('pipe', 'which zsh') }}"

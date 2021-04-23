@@ -149,6 +149,7 @@ package_list:
   - name: wget
   - name: xfsprogs
   - name: zfsutils-linux
+  - name: zsh
 
 
 ############################

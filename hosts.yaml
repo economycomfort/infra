@@ -11,14 +11,15 @@ all:
       ansible_host: 192.168.1.10
   
   children:
-    # ansible test VMs
-    test:
-      hosts:
-        ansible1:
-          ansible_host: 192.168.1.141
-          ansible_python_interpreter: /usr/bin/python3
-      vars:
-        ansible_user: ansible
+    
+    ## ansible test VMs
+    #test:
+    #  hosts:
+    #    ansible1:
+    #      ansible_host: 192.168.1.141
+    #      ansible_python_interpreter: /usr/bin/python3
+    #  vars:
+    #    ansible_user: ansible
     
     # prod hosts
     srv:

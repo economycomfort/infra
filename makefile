@@ -2,7 +2,7 @@ test:
 	ansible-playbook test.yaml --vault-password-file .vault-password
 
 update:
-	ansible-playbook update.yaml --limit vms
+	ansible-playbook update.yaml
 
 encrypt:
 	ansible-vault encrypt --vault-password-file .vault-password vars/vault.yaml

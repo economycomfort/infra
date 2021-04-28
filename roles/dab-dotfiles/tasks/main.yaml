@@ -5,7 +5,7 @@
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_dest }}"
-    force: yes
+    update: yes
     recursive: "{{ dotfiles_recursive | default('yes') }}"
   vars: 
     ansible_become: "{{ dotfiles_become | default('no') }}"

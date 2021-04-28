@@ -2,5 +2,5 @@
 {{ ansible_managed | comment }}
 
 echo ""
-/usr/local/bin/figurine -f "3d.flf" {{ figurine_name | default('`hostname`') }}
+/usr/local/bin/figurine -f "3d.flf" {{ figurine_name | default(inventory_hostname) }}
 echo ""

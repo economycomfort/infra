@@ -98,7 +98,6 @@
   - hosts: homebridge
     vars_files:
       - 'vars/vault.yaml'
-    tasks:
     roles:
       - role: dab-networking
       - role: dab-figurine
@@ -114,7 +113,10 @@
   ##############
   - hosts: vmal 
     tasks:
+      - name: Ensure correct hostname
+        ansible.builtin.hostname:
+          name: "{{ inventory_hostname }}"
+        become: yes
     roles:
-      #- role: grog.package
       - role: dab-dotfiles
       - role: dab-figurine

@@ -18,5 +18,5 @@
 
 - name: Make zsh default shell
   ansible.builtin.user:
-    name: "{{ main_username }}"
+    name: "{{ ansible_user }}"
     shell: "{{ lookup('pipe', 'which zsh') }}"

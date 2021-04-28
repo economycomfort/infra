@@ -5,21 +5,13 @@
 # https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html
 #
 all:
-  hosts:
+  hosts:  # individual hosts
+    
     # proxmox
     proxmox:
       ansible_host: 192.168.1.10
   
-  children:
-    
-    ## ansible test VMs
-    #test:
-    #  hosts:
-    #    ansible1:
-    #      ansible_host: 192.168.1.141
-    #      ansible_python_interpreter: /usr/bin/python3
-    #  vars:
-    #    ansible_user: ansible
+  children: # groups of hosts
     
     # prod hosts
     srv:
@@ -28,3 +20,11 @@ all:
           ansible_host: 192.168.1.200
         homebridge:
           ansible_host: 192.168.1.201
+
+    # attack lab
+    vmal:
+      hosts:
+        kali-se:
+          ansible_host: 10.254.20.120
+        kali-partner:
+          ansible_host: 10.250.20.118

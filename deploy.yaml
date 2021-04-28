@@ -1,7 +1,9 @@
 ---
+## Handles initial deployment and configuration of defined hosts.
+
   - hosts: all
-    #vars_files:
-    #  - "vars/all.yaml"
+    vars_files:
+      - 'vars/vault.yaml'
     roles:
     tasks:
      # Removes Ubuntu MOTD spam
@@ -29,9 +31,6 @@
   ###  proxmox  ###
   #################
   - hosts: proxmox
-    roles:
-      - role: dab-figurine
-      - role: ironicbadger.ansible_role_proxmox_nag_removal
     tasks:
       # Passes through primary user to be able to log in to web interface.
       # Needs a user created (probably david) and passwordless sudo.
@@ -40,7 +39,12 @@
         template:
           src: "proxmox/user.cfg.j2"  # relative to main playbook dir
           dest: "/etc/pve/user.cfg"
-
+    roles:
+      - role: dab-figurine
+      - role: grog.package
+      - role: dab-dotfiles
+      - role: ironicbadger.ansible_role_proxmox_nag_removal
+    
 
   ################
   ###  chunky  ###
@@ -103,3 +107,14 @@
       - role: geerlingguy.docker
       - role: dab-dotfiles
       #- role: dab-gitrepos
+
+
+  ##############
+  ###  VMAL  ###
+  ##############
+  - hosts: vmal 
+    tasks:
+    roles:
+      #- role: grog.package
+      - role: dab-dotfiles
+      - role: dab-figurine

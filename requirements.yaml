@@ -1,4 +1,4 @@
-# Various external ansible roles we may require.
+# Various Ansible Galaxy roles which may be required..
 
 ---
 collections:

@@ -1,5 +1,5 @@
-test:
-	ansible-playbook test.yaml --vault-password-file .vault-password
+deploy:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password
 
 update:
 	ansible-playbook update.yaml

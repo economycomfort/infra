@@ -1,3 +1,24 @@
 ---
-ansible_user: root
+target_os: debian
+ansible_become: no
+ansible_user: root  # key only
 ansible_python_interpreter: /usr/bin/python3
+
+## This is a hypervisor, keep it as 'clean' as possible
+
+######################
+###  grog.package  ###
+###################### 
+package_list:
+  - name: curl
+  - name: fio
+  - name: git
+  - name: htop
+  - name: iftop
+  - name: iotop
+  - name: net-tools
+  - name: openssh-server
+  - name: ssh-import-id
+  - name: tree
+  - name: wget
+  - name: zsh

@@ -59,7 +59,7 @@
   ansible.builtin.mount:
     name: "{{ item.mountpoint }}"
     src: "{{ item.src }}"
-    fstype: nfs
+    fstype: "{{ item.fstype | default('nfs4') }}"
     opts: "{{ item.opts | default('rw,sync,hard,intr') }}"
     # change to 'present' to skip auto-mount
     state: "{{ item.state | default('mounted') }}"
@@ -88,7 +88,7 @@
     name: "{{ item.mountpoint }}"
     src: "{{ item.src }}"
     fstype: none
-    opts: bind
+    opts: "{{ item.recursive | default('bind') }}"
     # change to 'present' to skip auto-mount
     state: "{{ item.state | default('mounted') }}"
   loop: "{{ bind_mounts }}"
@@ -96,3 +96,24 @@
   tags:
     - bindfs
     - mountpoints
+
+- name: Check to see if ZFS is installed
+  ansible.builtin.package_facts:
+    manager: "auto"
+  tags:
+    - zfs
+
+- name: Install docker override to wait for ZFS
+  ansible.builtin.template:
+    src: zfs-override.conf.j2
+    dest: /etc/systemd/system/docker.service.d/override.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  when: 
+    - ansible_distribution == "Ubuntu"
+    - "'zfsutils-linux' in ansible_facts.packages"
+  tags:
+    - docker
+    - zfs

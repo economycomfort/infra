@@ -5,6 +5,10 @@
     vars_files:
       - 'vars/vault.yaml'
     roles:
+      #- dab-networking
+      #- dab-figurine
+      #- dab-dotfiles
+      #- dab-storage
     tasks:
      # Removes Ubuntu MOTD spam
      - name: Remove Ubuntu MOTD spam
@@ -24,7 +28,7 @@
        ansible.builtin.file:
          path: "/etc/motd"
          state: absent
-       when: ansible_distribution == "Debian"
+       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   
 
   #################
@@ -40,9 +44,7 @@
           src: "proxmox/user.cfg.j2"  # relative to main playbook dir
           dest: "/etc/pve/user.cfg"
     roles:
-      - role: dab-figurine
       - role: grog.package
-      - role: dab-dotfiles
       - role: ironicbadger.ansible_role_proxmox_nag_removal
     
 
@@ -83,12 +85,8 @@
           - oldhome.stat.islnk == False
     
     roles:
-      - role: dab-networking
-      - role: dab-figurine
-      - role: grog.package
-      - role: dab-dotfiles
-      - role: dab-storage
-      - role: geerlingguy.docker
+      #- role: geerlingguy.docker
+      #- role: geerlingguy.nfs
       - role: bertvv.samba
 
 
@@ -99,12 +97,28 @@
     vars_files:
       - 'vars/vault.yaml'
     roles:
-      - role: dab-networking
-      - role: dab-figurine
       - role: ironicbadger.ansible_users
       - role: grog.package
       - role: geerlingguy.docker
-      - role: dab-dotfiles
+      #- role: dab-gitrepos
+
+
+  ###############
+  ###  media  ###
+  ###############
+  - hosts: media
+    vars_files:
+      - 'vars/vault.yaml'
+    tasks:
+      - name: debug output
+        ansible.builtin.debug:
+          msg: "{{ ansible_managed }}"
+    roles:
+      #- role: dab-networking
+      #- role: dab-figurine
+      #- role: ironicbadger.ansible_users
+      #- role: grog.package
+      #- role: geerlingguy.docker
       #- role: dab-gitrepos
 
 
@@ -118,5 +132,3 @@
           name: "{{ inventory_hostname }}"
         become: yes
     roles:
-      - role: dab-dotfiles
-      - role: dab-figurine

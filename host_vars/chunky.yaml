@@ -63,6 +63,11 @@ parity_disks:
 bind_mounts:
   - mountpoint: /srv/nfs/vm-backups
     src: /mnt/tank/backups/vm
+  - mountpoint: /srv/nfs/media
+    src: /mnt/tank/media
+    recursive: yes
+  - mountpoint: /srv/nfs/docker
+    src: /mnt/tank/docker
 
 ## NFS shares to be mounted
 #nfs_mounts:
@@ -85,6 +90,7 @@ fstab_mergerfs:
 ######################
 ###  bertvv.samba  ###
 ######################
+# Make sure the smb.conf template handles {{ ansible_managed }} appropriately at the top.
 samba_apple_extensions: yes
 samba_guest_account: nobody
 samba_load_homes: true               # share user homes
@@ -169,7 +175,7 @@ nfs_exports:
   - "/srv/nfs/media         10.255.255.0/24(rw,sync,no_subtree_check,crossmnt)"
   - "/srv/nfs/media/tv      10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)"
   - "/srv/nfs/media/movies  10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)"
-  - "/mnt/tank/home         10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)"
+  - "/srv/nfs/docker        10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)"
   - "/srv/nfs/vm-backups    10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)"
 
 

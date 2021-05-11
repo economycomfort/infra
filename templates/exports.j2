@@ -1,0 +1,11 @@
+# /etc/exports: the access control list for filesystems which may be exported
+#   to NFS clients.  See exports(5).
+#
+{{ ansible_managed | comment }}
+
+/srv/nfs               10.255.255.0/24(rw,sync,no_subtree_check,crossmnt,fsid=0)
+/srv/nfs/media         10.255.255.0/24(rw,sync,no_subtree_check,crossmnt)
+/srv/nfs/media/tv      10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)
+/srv/nfs/media/movies  10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)
+/srv/nfs/docker        10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)
+/srv/nfs/vm-backups    10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)

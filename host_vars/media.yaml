@@ -17,8 +17,31 @@ network_interfaces:
     #domain: brooks.haus
     #mtu: 1500
   - name: ens19
-    ip: '10.255.255.201/24'
+    ip: '10.255.255.202/24'
     mtu: 9000
+
+
+#####################
+###  dab-storage  ###
+#####################
+
+## NFS shares to be mounted
+nfs_mounts:
+  - mountpoint: /mnt/nfs
+    src: 10.255.255.200:/srv/nfs
+
+
+######################
+###  dab-gitrepos  ###
+######################
+gitrepos:
+  - name: docker
+    url: https://github.com/zerobaud/docker.git
+    path: /home/david/git/docker
+    #uid: 1000
+    #gid: 1000
+    #overwrite: no
+    #become: no
 
 
 ######################
@@ -51,17 +74,3 @@ docker_edition: "ce"
 docker_compose_version: "1.28.4"
 docker_users: 
   - david
-
-
-######################
-###  dab-gitrepos  ###
-######################
-gitrepos:
-  - name: docker
-    url: https://github.com/zerobaud/docker.git
-    path: /home/david/repos/docker
-    #uid: 1000
-    #gid: 1000
-    #overwrite: no
-    #become: no
-

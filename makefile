@@ -1,3 +1,9 @@
+chunky:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit chunky
+
+media:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit media
+
 deploy:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password
 

@@ -1,0 +1,67 @@
+{{ ansible_managed | comment }}
+#
+# vim: ft=samba
+
+[global]
+  # Server information
+  netbios name = {{ samba_netbios_name | default(ansible_hostname) }}
+  workgroup = WORKGROUP
+  server string = Fileserver %m
+
+  fruit:aapl = yes
+
+  # Logging
+  log file = /var/log/samba.log
+  max log size = 5000
+  log level = 1
+
+  # Authentication
+  security = user
+  passdb backend = tdbsam
+  map to guest = never
+  guest account = nobody
+
+  # Name resolution: make sure \\NETBIOS_NAME\ works
+  wins support = yes
+  local master = yes
+  domain master = yes
+  preferred master = yes
+
+  # Don't load printers
+  load printers = no
+  printing = bsd
+  printcap name = /dev/null
+  disable spoolss = yes
+
+
+  include = /etc/samba/samba-global.conf
+
+## Make home directories accessible
+[homes]
+  comment = Home Directories
+  browseable = no
+  writable = yes
+
+
+## Shared directories
+[media]
+  comment = A place for pirates.
+  path = /mnt/tank/media
+  public = False
+  guest ok = False
+  writable = True
+  create mode = 0664
+  force create mode = 0664
+  directory mode = 0775
+  force directory mode = 0775
+
+[timemachine]
+  comment = MacOS backups.
+  path = /mnt/tank/backups/timemachine/%U
+  public = no
+  create mode = 0664
+  force create mode = 0664
+  directory mode = 0775
+  force directory mode = 0775
+  include = /etc/samba/samba-timemachine.conf
+

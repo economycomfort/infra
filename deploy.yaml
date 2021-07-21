@@ -87,7 +87,8 @@
     roles:
       #- role: geerlingguy.docker
       #- role: geerlingguy.nfs
-      - role: bertvv.samba
+      #- role: bertvv.samba
+      - role: sprat.snapraid
 
 
   ####################
@@ -110,9 +111,6 @@
     vars_files:
       - 'vars/vault.yaml'
     tasks:
-      - name: debug output
-        ansible.builtin.debug:
-          msg: "{{ ansible_managed }}"
     roles:
       #- role: dab-networking
       #- role: dab-figurine

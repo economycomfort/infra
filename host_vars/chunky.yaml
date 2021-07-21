@@ -93,22 +93,12 @@ fstab_mergerfs:
 # Make sure the smb.conf template handles {{ ansible_managed }} appropriately at the top.
 samba_apple_extensions: yes
 samba_guest_account: nobody
-samba_load_homes: true               # share user homes
+samba_load_homes: true  # shares user $HOME automatically
 samba_log: /var/log/samba.log
 samba_log_level: 1
 samba_mitigate_cve_2017_7494: false  # unneeded for samba >4.6.4
-samba_global_include: samba-global.conf
+samba_global_include: samba-global.conf  # in master templates dir
 samba_shares:
-  #- name: "homes"
-  #  comment: "%U home directory"
-  #  path: "/mnt/tank/home/%U"
-  #  browseable: no
-  #  read_only: no
-  #  # writable: yes # writable for guests?
-  #  # create_mode: 0600
-  #  # directory_mode: 0700
-  #  valid_users: "%S"
-  #  guest_ok: no
   - name: media
     comment: A place for pirates.
     path: /mnt/tank/media
@@ -171,12 +161,12 @@ docker_users:
 ###  geerlingguy.nfs  ###
 #########################
 nfs_exports:
-  - "/srv/nfs               10.255.255.0/24(rw,sync,no_subtree_check,crossmnt,fsid=0)"
-  - "/srv/nfs/media         10.255.255.0/24(rw,sync,no_subtree_check,crossmnt)"
-  - "/srv/nfs/media/tv      10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)"
-  - "/srv/nfs/media/movies  10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)"
-  - "/srv/nfs/docker        10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)"
-  - "/srv/nfs/vm-backups    10.255.255.0/24(rw,sync,no_subtree_check,sec=sys)"
+  #-"/srv/nfs               10.255.255.0/24(rw,sync,no_subtree_check,crossmnt)"
+  - "/srv/nfs/docker        10.255.255.0/24(rw,sync,no_subtree_check)"
+  - "/srv/nfs/media         10.255.255.0/24(rw,sync,no_subtree_check)"
+  - "/srv/nfs/media/tv      10.255.255.0/24(rw,sync,no_subtree_check)"
+  - "srv/nfs/media/movies   10.255.255.0/24(rw,sync,no_subtree_check)"
+  - "/srv/nfs/vm-backups    10.255.255.10/32(rw,sync,no_subtree_check,no_root_squash)"
 
 
 ############################################
@@ -212,20 +202,11 @@ snapraid_data_disks:
     #smartctl_options: -d sat %s
   - name: disk2
     path: /mnt/disk2
-  - name: disk3
-    path: /mnt/disk3
-  - name: disk4
-    path: /mnt/disk4
-  - name: disk5
-    path: /mnt/disk5
 snapraid_parity_disks:
   - path: /mnt/parity1
 snapraid_content_files:
   - /mnt/disk1/snapraid.content
   - /mnt/disk2/snapraid.content
-  - /mnt/disk3/snapraid.content
-  - /mnt/disk4/snapraid.content
-  - /mnt/disk5/snapraid.content
 snapraid_excludes:
   - "*.unrecoverable"
   - "/tmp/"

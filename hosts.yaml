@@ -10,7 +10,11 @@ all:
     # proxmox
     proxmox:
       ansible_host: 192.168.1.10
-  
+
+    # GCP      
+    sandbox:
+      ansible_host: sandbox.brooks.haus
+          
   children: # groups of hosts
     
     # prod hosts
@@ -23,8 +27,8 @@ all:
         media:
           ansible_host: 192.168.1.202
 
-    # attack lab
-    vmal:
+    # vectra hosts
+    vectra:
       hosts:
         kali-se:
           ansible_host: 10.254.20.120

@@ -120,10 +120,21 @@
       #- role: dab-gitrepos
 
 
-  ##############
-  ###  VMAL  ###
-  ##############
-  - hosts: vmal 
+  #################
+  ###  sandbox  ###
+  #################
+  - hosts: sandbox
+    tasks:
+    roles:
+      - role: dab-figurine
+      - role: ironicbadger.ansible_users
+      - role: grog.package
+
+
+  ######################
+  ###  Vectra Hosts  ###
+  ######################
+  - hosts: vectra
     tasks:
       - name: Ensure correct hostname
         ansible.builtin.hostname:

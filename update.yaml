@@ -6,7 +6,7 @@
     roles:
       - role: ironicbadger.ansible_role_proxmox_nag_removal
 
-  - hosts: srv:proxmox
+  - hosts: srv:proxmox:sandbox
     tasks:
      - name: import keys from github
        become: yes

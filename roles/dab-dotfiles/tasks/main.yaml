@@ -1,7 +1,7 @@
 ---
 ## Handles installing various dotfiles.
 
-- name: Clone zerobaud/dotfiles repo from Github
+- name: Clone economycomfort/dotfiles repo from Github
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_dest }}"

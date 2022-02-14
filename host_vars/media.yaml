@@ -36,7 +36,7 @@ nfs_mounts:
 ######################
 gitrepos:
   - name: docker
-    url: https://github.com/zerobaud/docker.git
+    url: https://github.com/economycomfort/docker.git
     path: /home/david/git/docker
     #uid: 1000
     #gid: 1000

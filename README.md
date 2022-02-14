@@ -1,4 +1,4 @@
-# zerobaud/infra
+# economycomfort/infra
 
 Code used to deploy various services on my home network.
 Largely used to learn more about Ansible and infrastructure-as-code,

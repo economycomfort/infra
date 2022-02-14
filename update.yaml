@@ -13,7 +13,7 @@
        ansible.posix.authorized_key:
          user: "{{ ansible_user }}"
          state: present
-         key: https://github.com/zerobaud.keys
+         key: https://github.com/economycomfort.keys
 
      - name: update packages
        become: yes

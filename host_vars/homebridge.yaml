@@ -58,7 +58,7 @@ docker_users:
 ######################
 gitrepos:
   - name: docker
-    url: https://github.com/zerobaud/docker.git
+    url: https://github.com/economycomfort/docker.git
     path: /home/david/repos/docker
     #uid: 1000
     #gid: 1000

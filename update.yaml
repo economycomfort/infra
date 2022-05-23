@@ -4,7 +4,7 @@
   - hosts: proxmox
     tasks:
     roles:
-      - role: ironicbadger.ansible_role_proxmox_nag_removal
+      - role: ironicbadger.proxmox_nag_removal
 
   - hosts: srv:proxmox
     tasks:

@@ -45,7 +45,7 @@
           dest: "/etc/pve/user.cfg"
     roles:
       - role: grog.package
-      - role: ironicbadger.ansible_role_proxmox_nag_removal
+      - role: ironicbadger.proxmox_nag_removal
     
 
   ################

@@ -1,30 +1,30 @@
 ---
 
 - name: networking
-  include: networking.yaml
+  include_tasks: networking.yaml
   tags:
     - networking
 
 - name: disks
-  include: disks.yaml
+  include_tasks: disks.yaml
   tags:
     - disks
 
 - name: file sharing
-  include: file-sharing.yaml
+  include_tasks: file-sharing.yaml
   tags:
     - file-sharing
 
 #- name: telegraf docker fix
-#  include: telegraf-fix.yaml
+#  include_tasks: telegraf-fix.yaml
 
 #- name: override docker service for zfs dependencies
-#  include: docker-zfs-override.yml
+#  include_tasks: docker-zfs-override.yml
 #  when: docker_zfs_override
 
 # perhaps a generic 'node' monitoring setup role?
 # - name: monitoring
-#   include: monitoring.yml
+#   include_tasks: monitoring.yml
 #   tags:
 #     - monitoring%
 

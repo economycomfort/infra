@@ -9,7 +9,7 @@ all:
     
     # proxmox
     proxmox:
-      ansible_host: 10.25.20.10
+      ansible_host: 192.168.20.10
 
     # GCP      
     sandbox:
@@ -21,9 +21,9 @@ all:
     srv:
       hosts:
         chunky:
-          ansible_host: 10.25.20.200
+          ansible_host: 192.168.20.200
         homebot:
-          ansible_host: 10.25.20.201
+          ansible_host: 192.168.20.201
 
     # vectra hosts
     vectra:

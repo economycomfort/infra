@@ -91,10 +91,10 @@
       - role: sprat.snapraid
 
 
-  ####################
-  ###  homebridge  ###
-  ####################
-  - hosts: homebridge
+  #################
+  ###  homebot  ###
+  #################
+  - hosts: homebot
     vars_files:
       - 'vars/vault.yaml'
     roles:

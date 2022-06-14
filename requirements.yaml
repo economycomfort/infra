@@ -6,21 +6,15 @@ collections:
    - community.general
 
 - src: bertvv.samba
-
 - src: geerlingguy.docker
 - src: geerlingguy.github-users
 - src: geerlingguy.nfs
 - src: geerlingguy.ntp
 #- src: geerlingguy.samba
 - src: geerlingguy.security
-
 - src: grog.package
-
 - src: ironicbadger.proxmox_nag_removal
-- src: ironicbadger.ansible_role_snapraid
+- src: ironicbadger.snapraid
 - src: ironicbadger.ansible_users
-
 #- src: sprat.snapraid
 #- src: sprat.mergerfs
-
-

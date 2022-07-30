@@ -11,9 +11,9 @@ ansible_python_interpreter: /usr/bin/python3
 network_interfaces:
   - name: ens18
     dhcp: true
-    #ip: '192.168.1.200/24'
-    #gateway: '192.168.1.1'
-    #dns: '192.168.1.1'
+    #ip: '192.168.20.200/24'
+    #gateway: '192.168.20.1'
+    #dns: '192.168.20.1'
     #domain: brooks.haus
     #mtu: 1500
   - name: ens19
@@ -36,30 +36,7 @@ zfs_pools:
 #####################
 ###  dab-storage  ###
 #####################
-main_storage_path: /mnt/storage  # where our stuff goes
-
-## Disks used for storing bulk data (and merged via mergerfs)
-data_disks:
-  - mountpoint: /mnt/disk1
-    diskbyid: scsi-SATA_WDC_WD10EZEX-00B_WD-WCC3FJF7M6TE
-    fstype: xfs
-    opts: defaults
-    content: true
-  - mountpoint: /mnt/disk2
-    diskbyid: scsi-SATA_WDC_WD10EZEX-00B_WD-WCC3FMA2LTJY
-    fstype: xfs
-    opts: defaults
-    content: true
-
-## Disks used for snapraid parity
-parity_disks:
-  - mountpoint: /mnt/parity1
-    diskbyid: scsi-SATA_ST1000DM010-2EP1_Z9AXXA1V
-    fstype: xfs
-    opts: defaults
-    content: false
-
-## Bind mount mappings for NFS sharing
+# Bind mount mappings for NFS sharing
 bind_mounts:
   - mountpoint: /srv/nfs/vm-backups
     src: /mnt/tank/backups/vm
@@ -69,22 +46,11 @@ bind_mounts:
   - mountpoint: /srv/nfs/docker
     src: /mnt/tank/docker
 
-## NFS shares to be mounted
+# NFS shares to be mounted
 #nfs_mounts:
 #  - mountpoint: /mnt/whatever
 #    src: 10.255.255.200:/srv/nfs/whatever
 #    opts: rw,sync,hard,intr
-
-## MergerFS fstab - best to leave this as a list.
-fstab_mergerfs:
-  - mountpoint: "{{ main_storage_path }}"
-    src: "/mnt/disk*"
-    fstype: fuse.mergerfs
-    opts:
-        "defaults,nonempty,allow_other,use_ino,\
-        cache.files=off,moveonenospc=true,\
-        category.create=mfs,dropcacheonclose=true,\
-        minfreespace=1G,fsname=mergerfs"
 
 
 ######################
@@ -127,7 +93,6 @@ package_list:
   - name: iftop
   - name: iotop
   - name: mc
-  - name: mergerfs
   - name: ncdu
   - name: net-tools
   - name: nfs-kernel-server
@@ -167,61 +132,4 @@ nfs_exports:
   - "/srv/nfs/media/tv      10.255.255.0/24(rw,sync,no_subtree_check)"
   - "srv/nfs/media/movies   10.255.255.0/24(rw,sync,no_subtree_check)"
   - "/srv/nfs/vm-backups    10.255.255.10/32(rw,sync,no_subtree_check,no_root_squash)"
-
-
-############################################
-###  ironicbadger.ansible_role_snapraid  ###
-############################################
-snapraid_email_address: dabrooks@outlook.com
-snapraid_gmail_pass: "{{ snapraid_email_password }}"
-snapraid_healthcheck_io_uuid: "{{ snapraid_healthcheck_secret }}"
-snapraid_config_excludes:
-  - "*.unrecoverable"
-  - "/tmp/"
-  - "/lost+found/"
-  - "downloads/"
-  - "appdata/"
-  - "*.!sync"
-  - ".AppleDouble"
-  - "._AppleDouble"
-  - ".DS_Store"
-  - "._.DS_Store"
-  - ".Thumbs.db"
-  - ".fseventsd"
-  - ".Spotlight-V100"
-  - ".TemporaryItems"
-  - ".Trashes"
-  - ".AppleDB"
-
-########################
-###  sprat.snapraid  ###
-########################
-snapraid_data_disks:
-  - name: disk1
-    path: /mnt/disk1
-    #smartctl_options: -d sat %s
-  - name: disk2
-    path: /mnt/disk2
-snapraid_parity_disks:
-  - path: /mnt/parity1
-snapraid_content_files:
-  - /mnt/disk1/snapraid.content
-  - /mnt/disk2/snapraid.content
-snapraid_excludes:
-  - "*.unrecoverable"
-  - "/tmp/"
-  - "/lost+found/"
-  - "downloads/"
-  - "appdata/"
-  - "*.!sync"
-  - ".AppleDouble"
-  - "._AppleDouble"
-  - ".DS_Store"
-  - "._.DS_Store"
-  - ".Thumbs.db"
-  - ".fseventsd"
-  - ".Spotlight-V100"
-  - ".TemporaryItems"
-  - ".Trashes"
-  - ".AppleDB"
 

@@ -5,10 +5,7 @@
 ## - the disks are already formatted and contain data (example: new VM + passthough LSI)
 ## - disks aren't already mounted, and mountpoints will be created.
 ## - information about disks and mountpoints defined as lists of dicts:
-##   - data_disks
-##   - parity_disks
 ##   - bind_mounts
-##   - fstab_mergerfs
 ##   - nfs_mounts
 ##
 
@@ -18,10 +15,7 @@
 - name: Reticulating splines
   ansible.builtin.set_fact:
     mountpoints: 
-      "{{ data_disks | default([]) \
-      + parity_disks | default([]) \
-      + fstab_mergerfs | default([]) \
-      + bind_mounts | default([]) \
+      "{{ bind_mounts | default([]) \
       + nfs_mounts | default([]) }}" 
   tags:
     - mountpoints
@@ -36,23 +30,6 @@
   loop: "{{ mountpoints }}"
   when: item.mountpoint is defined
   tags:
-    - disks
-    - mountpoints
-
-- name: Mount physical disks
-  ansible.builtin.mount:
-    name: "{{ item.mountpoint }}"
-    src: "/dev/disk/by-id/{{ item.diskbyid }}"
-    fstype: "{{ item.fstype }}"
-    opts: "{{ item.opts | default('defaults') }}"
-    # change to 'present' to skip auto-mount
-    state: "{{ item.state | default('mounted') }}"
-  loop: "{{ mountpoints }}"
-  when: 
-    - item.mountpoint != '/mnt/storage'
-    - item.diskbyid is defined
-  tags:
-    - disks
     - mountpoints
 
 - name: Mount NFS shares
@@ -67,20 +44,6 @@
   when: nfs_mounts is defined
   tags:
     - nfs
-    - mountpoints
-
-- name: Mount mergerfs array
-  ansible.builtin.mount:
-    name: "{{ item.mountpoint }}"
-    src: "{{ item.src }}"
-    fstype: fuse.mergerfs
-    opts: "{{ item.opts }}"
-    # change to 'present' to skip auto-mount
-    state: "{{ item.state | default('mounted') }}"
-  loop: "{{ fstab_mergerfs }}"
-  when: fstab_mergerfs is defined
-  tags:
-    - mergerfs
     - mountpoints
 
 - name: Create bind mounts

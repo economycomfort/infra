@@ -100,7 +100,6 @@ package_list:
   - name: openssh-server
   - name: python
   - name: qemu-guest-agent  # Proxmox/QEMU
-  #- name: open-vm-tools     # VMWare
   - name: samba
   #- name: sanoid           # ZFS snapshots
   - name: smartmontools
@@ -130,6 +129,6 @@ nfs_exports:
   - "/srv/nfs/docker        10.255.255.0/24(rw,sync,no_subtree_check)"
   - "/srv/nfs/media         10.255.255.0/24(rw,sync,no_subtree_check)"
   - "/srv/nfs/media/tv      10.255.255.0/24(rw,sync,no_subtree_check)"
-  - "srv/nfs/media/movies   10.255.255.0/24(rw,sync,no_subtree_check)"
+  - "/srv/nfs/media/movies  10.255.255.0/24(rw,sync,no_subtree_check)"
   - "/srv/nfs/vm-backups    10.255.255.10/32(rw,sync,no_subtree_check,no_root_squash)"
 

@@ -14,7 +14,7 @@ all:
     # GCP      
     sandbox:
       ansible_host: sandbox.brooks.haus
-          
+  
   children: # groups of hosts
     
     # prod hosts

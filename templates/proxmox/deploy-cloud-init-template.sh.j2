@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+{{ ansible_managed | comment }}
+set -e
+
+IMAGE="./jammy-server-cloudimg-amd64.img"
+URL="https://cloud-images.ubuntu.com/jammy/current"
+PACKAGES=(
+  qemu-guest-agent
+  nfs-common
+)
+
+
+# installing libguestfs-tools only required once, prior to first run
+#sudo apt update -y
+#sudo apt install libguestfs-tools -y
+
+# remove existing image in case last execution did not complete successfully
+#if [ -f ${IMAGE} ]; then 
+#  rm ${IMAGE}
+#fi
+#wget ${URL}/`basename ${IMAGE}`
+
+# patch the image with required packages
+pkg_string=""
+for i in ${PACKAGES[@]}; do
+  pkg_string="${pkg_string} --install $i"
+done
+echo "DEBUG: Package string: $pkg_string"
+sudo virt-customize -a ./${IMAGE} ${pkg_string}
+
+# create vm from the image and set some options 
+sudo qm create 9000 --name "ubuntu-template" \
+  --memory 2048 --cores 2 \
+  --net0 virtio,bridge=vmbr0,tag=69 \
+  --net1 virtio,bridge=vmbr2
+sudo qm importdisk 9000 ./${IMAGE} local-lvm
+sudo qm set 9000 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-0
+sudo qm set 9000 --boot c --bootdisk scsi0
+sudo qm set 9000 --ide2 local-lvm:cloudinit
+sudo qm set 9000 --serial0 socket --vga serial0
+sudo qm set 9000 --agent enabled=1
+
+# create template from vm
+sudo qm template 9000
+
+#rm ./${IMAGE}
+
+echo
+echo "Ensure that cloud-init options are correct for the template (user, ssh kes, etc.)"
+echo "Clone the VM, then expand the disk and set other hardware options."

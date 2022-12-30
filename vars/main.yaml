@@ -1,0 +1,3 @@
+---
+timezone: 'Etc/UTC'
+ntp_server: 'time.cloudflare.com'

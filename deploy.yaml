@@ -55,6 +55,7 @@
       #- role: grog.package
       - role: geerlingguy.ntp
       #- role: proxmox_nag_removal
+      - role: simoncaron.pve_addons
  
   ################
   ###  chunky  ###

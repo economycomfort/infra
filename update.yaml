@@ -4,7 +4,8 @@
   - hosts: proxmox
     tasks:
     roles:
-      - role: proxmox_nag_removal
+      #- role: proxmox_nag_removal
+      - role: simoncaron.pve_addons
 
   - hosts: srv:proxmox
     tasks:

@@ -93,6 +93,21 @@
           - tankhome.stat.exists == True
           - oldhome.stat.islnk == False
     
+      # Sanoid configuration for ZFS snapshots
+      - name: Create /etc/sanoid directory
+        ansible.builtin.file:
+          path: /etc/sanoid
+          state: directory
+          mode: 0755
+
+      - name: Copy sanoid configuration file
+        ansible.builtin.template:
+          src: sanoid.conf.j2
+          dest: /etc/sanoid/sanoid.conf
+          owner: root
+          group: root
+          mode: 0644
+
     roles:
       - role: grog.package
       - role: geerlingguy.docker

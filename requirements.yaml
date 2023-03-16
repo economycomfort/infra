@@ -2,22 +2,11 @@
 collections:
   - name: community.general
 
-- src: bertvv.samba
-- src: geerlingguy.docker
-- src: geerlingguy.github-users
-- src: geerlingguy.nfs
-- src: geerlingguy.security
-- src: grog.package
-
-# Github repos
-- name: proxmox_nag_removal
-  src: https://github.com/ironicbadger/ansible-role-proxmox-nag-removal
-  version: origin/master
-
-#- src: geerlingguy.samba
-#- src: geerlingguy.ntp
-#- src: ironicbadger.snapraid
-#- src: ironicbadger.ansible_users
-#- src: ironicbadger.proxmox_nag_removal
-#- src: sprat.snapraid
-#- src: sprat.mergerfs
+roles:
+  - name: bertvv.samba
+  - name: geerlingguy.docker
+  - name: geerlingguy.github-users
+  - name: geerlingguy.nfs
+  - name: geerlingguy.security
+  - name: grog.package
+  - name: simoncaron.pve_addons

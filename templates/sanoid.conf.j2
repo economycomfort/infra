@@ -1,0 +1,69 @@
+############################################################
+{{ ansible_managed | comment }}
+############################################################
+
+[tank/appdata]
+use_template = production
+
+[tank/backups]
+use_template = backup
+
+[tank/home]
+use_template = production
+recursive = yes
+process_children_only = yes
+
+[tank/media]
+use_template = media
+
+#############################
+# templates below this line #
+#############################
+
+[template_production]
+frequently = 0
+hourly = 0
+daily = 31
+weekly = 8
+monthly = 12
+yearly = 0
+autosnap = yes
+autoprune = yes
+
+[template_backup]
+frequently = 0
+hourly = 0
+daily = 90
+weekly = 26
+monthly = 24
+yearly = 6
+### replicate snapshots from source, don't generate locally
+autosnap = no
+autoprune = yes
+
+[template_media]
+frequently = 0
+hourly = 0
+daily = 7
+weekly = 8
+monthly = 6
+yearly = 0
+autosnap = yes
+autoprune = yes
+
+hourly_warn = 2880
+hourly_crit = 3600
+daily_warn = 48
+daily_crit = 60
+
+[template_scripts]
+### limit allowed execution time of scripts before continuing (<= 0: infinite)
+script_timeout = 5
+
+[template_ignore]
+autoprune = no
+autosnap = no
+monitor = no
+############################################################
+# End of file
+############################################################

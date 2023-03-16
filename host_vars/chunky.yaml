@@ -88,7 +88,6 @@ package_list:
   - name: curl
   - name: fio
   - name: git
-  - name: hddtemp
   - name: htop
   - name: iftop
   - name: iotop
@@ -98,16 +97,15 @@ package_list:
   - name: nfs-kernel-server
   - name: nmap
   - name: openssh-server
-  - name: python
-  - name: qemu-guest-agent  # Proxmox/QEMU
+  - name: python3
+  - name: qemu-guest-agent
   - name: samba
-  #- name: sanoid           # ZFS snapshots
+  - name: sanoid
   - name: smartmontools
   - name: ssh-import-id
   - name: tmux
   - name: tree
   - name: wget
-  - name: xfsprogs
   - name: zfsutils-linux
   - name: zsh
 
@@ -116,7 +114,10 @@ package_list:
 ###  geerlingguy.docker  ###
 ############################
 docker_edition: "ce"
-docker_compose_version: "1.28.4"
+docker_packages_state: latest
+docker_install_compose_plugin: true
+docker_compose_package: docker-compose-plugin
+docker_compose_package_state: latest
 docker_users: 
   - david
 

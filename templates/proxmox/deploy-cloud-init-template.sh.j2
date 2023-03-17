@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
+#
 {{ ansible_managed | comment }}
+#
+# Downloads and configures a VM from an Ubuntu cloud image.
+# Installs packages, defines default hardware, and creates a template from the VM.
+#
 set -e
 
 IMAGE="./jammy-server-cloudimg-amd64.img"
@@ -30,21 +35,22 @@ sudo virt-customize -a ./${IMAGE} ${pkg_string}
 
 # create vm from the image and set some options 
 sudo qm create 9000 --name "ubuntu-template" \
-  --memory 2048 --cores 2 \
-  --net0 virtio,bridge=vmbr0,tag=69 \
-  --net1 virtio,bridge=vmbr2
+  --memory 2048 --cores 2 \                     # 2GB RAM, 2 cores
+  --net0 virtio,bridge=vmbr0,tag=69 \           # Primary network interface on vmbr0 (LAN)
+  --net1 virtio,bridge=vmbr2                    # Secondary network interface on vmbr2 (storage)
 sudo qm importdisk 9000 ./${IMAGE} local-lvm
 sudo qm set 9000 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-0
 sudo qm set 9000 --boot c --bootdisk scsi0
 sudo qm set 9000 --ide2 local-lvm:cloudinit
-sudo qm set 9000 --serial0 socket --vga serial0
+sudo qm set 9000 --serial0 socket --vga serial0 # Creates a serial console instead of VGA
 sudo qm set 9000 --agent enabled=1
 
 # create template from vm
 sudo qm template 9000
 
-#rm ./${IMAGE}
+# Remove unneeded template
+rm ./${IMAGE}
 
 echo
-echo "Ensure that cloud-init options are correct for the template (user, ssh kes, etc.)"
+echo "Ensure that cloud-init options are correct for the template (user, ssh keys, etc.)"
 echo "Clone the VM, then expand the disk and set other hardware options."

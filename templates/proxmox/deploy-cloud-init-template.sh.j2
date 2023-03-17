@@ -9,46 +9,54 @@ set -e
 
 IMAGE="./jammy-server-cloudimg-amd64.img"
 URL="https://cloud-images.ubuntu.com/jammy/current"
-PACKAGES=(
+ID=9000     # Numeric ID to assign to created VM/template
+PACKAGES=(  # Array of Ubuntu/Debian package names the created template should have pre-installed.
   qemu-guest-agent
   nfs-common
 )
 
+# Make sure this script is being run as root.
+if [ ! $(id -u) = 0 ]; then
+  echo "Please run this script as root, or with `sudo`."
+  exit 1
+fi
 
-# installing libguestfs-tools only required once, prior to first run
-#sudo apt update -y
-#sudo apt install libguestfs-tools -y
+# Ensure required packages exist on the proxmox host prior to proceeding.
+if [ ! $(dpkg -l | grep -q libguestfs-tools) ]; then
+  echo "ERROR: libguestfs-tools is not installed on this host."
+  echo "Install the package with 'apt update -y && apt install libguestfs-tools', then re-run this script."
+  exit 1
+fi
 
-# remove existing image in case last execution did not complete successfully
+# Remove existing image in case last execution did not complete successfully
 if [ -f ${IMAGE} ]; then 
   rm ${IMAGE}
 fi
 wget ${URL}/`basename ${IMAGE}`
 
-# patch the image with required packages
+# Patch the image with required packages
 pkg_string=""
 for i in ${PACKAGES[@]}; do
   pkg_string="${pkg_string} --install $i"
 done
-echo "DEBUG: Package string: $pkg_string"
-sudo virt-customize -a ./${IMAGE} ${pkg_string}
+virt-customize -a ./${IMAGE} ${pkg_string}
 
-# create vm from the image and set some options 
-sudo qm create 9000 --name "ubuntu-template" \
+# Create a VM from the image and set some options 
+qm create ${ID} --name "ubuntu-template" \
   --memory 2048 --cores 2 \                     # 2GB RAM, 2 cores
   --net0 virtio,bridge=vmbr0,tag=69 \           # Primary network interface on vmbr0 (LAN)
   --net1 virtio,bridge=vmbr2                    # Secondary network interface on vmbr2 (storage)
-sudo qm importdisk 9000 ./${IMAGE} local-lvm
-sudo qm set 9000 --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-0
-sudo qm set 9000 --boot c --bootdisk scsi0
-sudo qm set 9000 --ide2 local-lvm:cloudinit
-sudo qm set 9000 --serial0 socket --vga serial0 # Creates a serial console instead of VGA
-sudo qm set 9000 --agent enabled=1
+qm importdisk ${ID} ./${IMAGE} local-lvm
+qm set ${ID} --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-0
+qm set ${ID} --boot c --bootdisk scsi0
+qm set ${ID} --ide2 local-lvm:cloudinit
+qm set ${ID} --serial0 socket --vga serial0 # Creates a serial console instead of VGA
+qm set ${ID} --agent enabled=1
 
-# create template from vm
-sudo qm template 9000
+# Templatize the VM
+qm template ${ID}
 
-# Remove unneeded template
+# Remove unneeded cloud image
 rm ./${IMAGE}
 
 echo

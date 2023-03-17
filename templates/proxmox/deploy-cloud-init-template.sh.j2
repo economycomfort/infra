@@ -15,10 +15,10 @@ PACKAGES=(
 #sudo apt install libguestfs-tools -y
 
 # remove existing image in case last execution did not complete successfully
-#if [ -f ${IMAGE} ]; then 
-#  rm ${IMAGE}
-#fi
-#wget ${URL}/`basename ${IMAGE}`
+if [ -f ${IMAGE} ]; then 
+  rm ${IMAGE}
+fi
+wget ${URL}/`basename ${IMAGE}`
 
 # patch the image with required packages
 pkg_string=""

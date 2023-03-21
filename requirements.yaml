@@ -1,12 +1,13 @@
 # Galaxy
 collections:
   - name: community.general
+  - name: vladgh.samba
 
 roles:
-  - name: bertvv.samba
+  - name: buluma.mount
   - name: geerlingguy.docker
   - name: geerlingguy.github-users
   - name: geerlingguy.nfs
-  - name: geerlingguy.security
+  - name: geerlingguy.ntp
   - name: grog.package
   - name: simoncaron.pve_addons

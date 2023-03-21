@@ -1,61 +1,102 @@
 #!/usr/bin/env bash
 {{ ansible_managed | comment }}
-# Downloads and configures a VM from an Ubuntu cloud image.
-# Installs packages, defines default hardware, and creates a template from the VM.
+# Downloads and configures a VM template from a Linux cloud image in raw .img or .qcow2 format.
+#
+# Usage:
+# ./deploy-cloud-init-template.sh <id> <url>
+#
+#   - id: numeric VM ID to assign to the template (must be unique)
+#   - name: name for the VM template, e.g., "ubuntu-template"
+#   - url: URL of cloud img to download (.img or .qcow2)
+#
+# Example:
+# ./deploy-cloud-init-template.sh 9999 ubuntu-template https://cloud-imgs.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
+#
+# Common cloud image URLs:
+# Ubuntu: https://cloud-imgs.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
+# Debian: https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-generic-amd64.qcow2
+# Arch: https://geo.mirror.pkgbuild.com/imgs/latest/Arch-Linux-x86_64-cloudimg.qcow2
 #
 set -e
 
-IMAGE="./jammy-server-cloudimg-amd64.img"
-URL="https://cloud-images.ubuntu.com/jammy/current"
-ID=9000     # Numeric ID to assign to created VM/template
-PACKAGES=(  # Array of Ubuntu/Debian package names the created template should have pre-installed.
-  qemu-guest-agent
-  nfs-common
-)
+# Usage instructions
+usage () {
+  cat <<EOF
+Usage: $0 <id> <url>
+
+  - id: numeric VM ID to assign to the template (must be unique)
+  - name: name for the VM template, e.g., "ubuntu-template"
+  - url: url of cloud img to download (img or qcow2)
+
+Example:
+$0 9999 ubuntu-template https://cloud-imgs.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
+
+EOF
+}
+
+# Ensure we have the correct amount of arguments.
+if [ -z $3 ]; then
+  usage
+  exit 1
+else
+  id=$1
+  name=$2
+  url=$3
+  img=$(basename ${url})
+fi
 
 # Make sure this script is being run as root.
-if [ ! $(id -u) = 0 ]; then
+if [ $(id -u) != 0 ]; then
   echo "Please run this script as root, or with `sudo`."
   exit 1
 fi
 
 # Ensure required packages exist on the proxmox host prior to proceeding.
-if [ ! $(dpkg -l | grep -q libguestfs-tools) ]; then
+if [ -z "$(dpkg -l | grep libguestfs-tools)" ]; then
   echo "ERROR: libguestfs-tools is not installed on this host."
   echo "Install the package with 'apt update -y && apt install libguestfs-tools', then re-run this script."
   exit 1
 fi
 
-# Remove existing image in case last execution did not complete successfully
-if [ -f ${IMAGE} ]; then 
-  rm ${IMAGE}
+# Remove existing image file in case last execution did not complete successfully
+if [ -f ./${img} ]; then 
+  rm ./${img}
 fi
-wget ${URL}/`basename ${IMAGE}`
+wget ${url}
 
-# Patch the image with required packages
+# Array of Ubuntu/Debian package names the created template should have pre-installed.
+PACKAGES=(
+  qemu-guest-agent
+  nfs-common
+)
+
+# Patch image file with required packages
 pkg_string=""
 for i in ${PACKAGES[@]}; do
   pkg_string="${pkg_string} --install $i"
 done
-virt-customize -a ./${IMAGE} ${pkg_string}
+virt-customize -a ./${img} ${pkg_string}
 
-# Create a VM from the image and set some options 
-qm create ${ID} --name "ubuntu-template" \
-  --memory 2048 --cores 2 \                     # 2GB RAM, 2 cores
-  --net0 virtio,bridge=vmbr0,tag=69 \           # Primary network interface on vmbr0 (LAN)
-  --net1 virtio,bridge=vmbr2                    # Secondary network interface on vmbr2 (storage)
-qm importdisk ${ID} ./${IMAGE} local-lvm
-qm set ${ID} --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-9000-disk-0
-qm set ${ID} --boot c --bootdisk scsi0
-qm set ${ID} --ide2 local-lvm:cloudinit
-qm set ${ID} --serial0 socket --vga serial0 # Creates a serial console instead of VGA
-qm set ${ID} --agent enabled=1
+# Create a VM from the image file and set some hardware resources.
+# RAM: 2GB, CPU Cores: 2
+# Network adapters attached to vmbr0 (LAN), vmbr2 (storage)
+# Serial console display, guest qemu agent enabled
+qm create ${id} --name ${name} \
+  --memory 2048 --cores 2 \
+  --net0 virtio,bridge=vmbr0,tag=69 \
+  --net1 virtio,bridge=vmbr2
+qm importdisk ${id} ./${img} local-lvm
+qm set ${id} --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-${id}-disk-0
+qm set ${id} --boot c --bootdisk scsi0
+qm set ${id} --ide2 local-lvm:cloudinit
+qm set ${id} --serial0 socket --vga serial0
+qm set ${id} --agent enabled=1
 
 # Templatize the VM
-qm template ${ID}
+qm template ${id}
 
-# Remove unneeded cloud image
-rm ./${IMAGE}
+# Remove unneeded cloud img
+rm ./${img}
 
 echo
 echo "Ensure that cloud-init options are correct for the template (user, ssh keys, etc.)"

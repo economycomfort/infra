@@ -12,13 +12,13 @@ ansible_python_interpreter: /usr/bin/python3
 package_list:
   - name: curl
   - name: fio
+  - name: ncdu
   - name: git
   - name: htop
   - name: iftop
   - name: iotop
   - name: libguestfs-tools
   - name: net-tools
-  - name: openssh-server
   - name: ssh-import-id
   - name: tree
   - name: wget
@@ -29,11 +29,13 @@ package_list:
 #########################
 ntp_enabled: true
 ntp_timezone: America/New_York
-ntp_package: ntp
-ntp_config_file: /etc/ntp.conf
+ntp_package: chrony     # ntp or chrony
+ntp_daemon: chrony
+ntp_config_file: /etc/chrony/chrony.conf
 ntp_manage_config: true # allow role to manage NTP config
 ntp_servers: 
   - "time.cloudflare.com iburst"
+  - "time.google.com iburst"
 
 ###############################
 ###  simoncaron.pve_addons  ###

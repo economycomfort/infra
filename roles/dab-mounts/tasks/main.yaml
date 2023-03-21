@@ -1,13 +1,6 @@
 ---
-## Manages tasks involving mounting drives and defining mountpoints.
-## 
-## Assumptions:
-## - the disks are already formatted and contain data (example: new VM + passthough LSI)
-## - disks aren't already mounted, and mountpoints will be created.
-## - information about disks and mountpoints defined as lists of dicts:
-##   - bind_mounts
-##   - nfs_mounts
-##
+## Manages creating and mounting filesystems.
+## DEPRECATED: using buluma.mount instead - very similar but more flexibility.
 
 # This is ugly, but avoids a lot of conditionals later.
 # Idea is that all these lists may not be defined, so this flattens the existing lists
@@ -46,12 +39,12 @@
     - nfs
     - mountpoints
 
-- name: Create bind mounts
+- name: Create bind mounts for NFS exports
   ansible.builtin.mount:
     name: "{{ item.mountpoint }}"
     src: "{{ item.src }}"
     fstype: none
-    opts: "{{ item.recursive | default('bind') }}"
+    opts: "{{ item.opts | default('bind') }}"
     # change to 'present' to skip auto-mount
     state: "{{ item.state | default('mounted') }}"
   loop: "{{ bind_mounts }}"

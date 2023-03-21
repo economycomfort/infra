@@ -29,7 +29,6 @@
          path: "/etc/motd"
          state: absent
        when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
-  
 
   #################
   ###  proxmox  ###
@@ -55,7 +54,7 @@
       #- role: grog.package
       - role: geerlingguy.ntp
       #- role: proxmox_nag_removal
-      - role: simoncaron.pve_addons
+      #- role: simoncaron.pve_addons
  
   ################
   ###  chunky  ###
@@ -63,6 +62,7 @@
   - hosts: chunky
     vars_files:
       - 'vars/vault.yaml'
+    
     pre_tasks:
       # Seemingly not worth writing a whole role to manage ZFS on one host.
       # Ideally, just mount these pools manually before running playbook.
@@ -93,6 +93,14 @@
           - tankhome.stat.exists == True
           - oldhome.stat.islnk == False
     
+    roles:
+      - role: buluma.mount
+      - role: grog.package
+      - role: geerlingguy.docker
+      - role: geerlingguy.nfs
+      - role: vladgh.samba.server
+    
+    tasks:
       # Sanoid configuration for ZFS snapshots
       - name: Create /etc/sanoid directory
         ansible.builtin.file:
@@ -108,13 +116,6 @@
           group: root
           mode: 0644
 
-    roles:
-      - role: grog.package
-      - role: geerlingguy.docker
-      - role: geerlingguy.nfs
-      - role: bertvv.samba
-
-
   #################
   ###  homebot  ###
   #################
@@ -124,8 +125,6 @@
     roles:
       - role: grog.package
       - role: geerlingguy.docker
-      #- role: dab-gitrepos
-
 
   #################
   ###  sandbox  ###
@@ -133,9 +132,7 @@
   - hosts: sandbox
     tasks:
     roles:
-      - role: dab-figurine
       - role: grog.package
-
 
   ######################
   ###  Vectra Hosts  ###

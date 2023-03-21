@@ -1,3 +1,2 @@
 ---
-timezone: 'Etc/UTC'
-ntp_server: 'time.cloudflare.com'
+### Common vars across all hosts

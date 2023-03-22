@@ -1,5 +1,6 @@
 ---
-## Sets up initial networking.
+### Sets up initial networking.
+### DEPRECATED:  This functionality is largely handled through cloud-init and terraform.
 
 - name: Ensure correct hostname
   hostname:

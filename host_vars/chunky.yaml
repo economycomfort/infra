@@ -4,21 +4,6 @@ ansible_become: yes
 ansible_user: david
 ansible_python_interpreter: /usr/bin/python3
 
-########################
-###  dab-networking  ###
-########################
-network_interfaces:
-  - name: ens18
-    dhcp: true
-    #ip: '192.168.20.200/24'
-    #gateway: '192.168.20.1'
-    #dns: '192.168.20.1'
-    #domain: brooks.haus
-    #mtu: 1500
-  - name: ens19
-    ip: '10.255.255.200/24'
-    mtu: 9000
-
 #############
 ###  ZFS  ###
 #############
@@ -82,6 +67,7 @@ package_list:
   - name: nfs-kernel-server
   - name: nmap
   - name: qemu-guest-agent
+  - name: python3
   - name: samba
   - name: sanoid
   - name: smartmontools
@@ -100,7 +86,6 @@ samba_guest_account: nobody
 samba_load_homes: true  # shares user $HOME automatically
 samba_log: /var/log/samba.log
 samba_log_level: 1
-#samba_mitigate_cve_2017_7494: false  # unneeded for samba >4.6.4
 samba_global_include: samba-global.conf  # in master templates dir
 samba_shares:
   - name: media
@@ -115,4 +100,3 @@ samba_shares:
     # Manually correcting the file and restarting the process can fix.  Not sure why.
     path: "/mnt/tank/backups/timemachine/%U"
     include_file: samba-timemachine.conf  # in master templates dir
-

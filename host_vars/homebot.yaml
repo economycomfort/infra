@@ -4,38 +4,15 @@ ansible_become: yes
 ansible_user: david
 ansible_python_interpreter: /usr/bin/python3
 
-
-########################
-###  dab-networking  ###
-########################
-network_interfaces:
-  - name: ens18
-    dhcp: true
-    #ip: '192.168.1.201/24'
-    #gateway: '192.168.1.1'
-    #dns: '192.168.1.1'
-    #domain: brooks.haus
-    #mtu: 1500
-  - name: ens19
-    ip: '10.255.255.201/24'
-    mtu: 9000
-
-
 ######################
 ###  grog.package  ###
 ###################### 
 package_list:
-  - name: bash-completion
   - name: curl
-  - name: fio
   - name: git
   - name: htop
-  - name: iftop
-  - name: iotop
-  - name: mc
   - name: net-tools
-  - name: openssh-server
-  - name: python
+  - name: python3
   - name: qemu-guest-agent  # Proxmox/QEMU
   - name: ssh-import-id
   - name: tmux
@@ -43,15 +20,16 @@ package_list:
   - name: wget
   - name: zsh
 
-
 ############################
 ###  geerlingguy.docker  ###
 ############################
 docker_edition: "ce"
-docker_compose_version: "1.28.4"
+docker_packages_state: latest
+docker_install_compose_plugin: true
+docker_compose_package: docker-compose-plugin
+docker_compose_package_state: latest
 docker_users: 
   - david
-
 
 ######################
 ###  dab-gitrepos  ###
@@ -64,4 +42,3 @@ gitrepos:
     #gid: 1000
     #overwrite: no
     #become: no
-

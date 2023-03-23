@@ -7,13 +7,14 @@ ansible_python_interpreter: /usr/bin/python3
 #############
 ###  ZFS  ###
 #############
-# NOTE: The pool(s) below should be created and imported.
+# NOTE: The pool(s) below should be created and imported prior to playbook execution.
 # Frankly, not worth writing a whole role to do this, since any data on them
 # shouldn't go away -- if we're reprovisioning a whole ZFS pool from scratch,
-# something else has happened.
+# something else has happened to require manual intervention.
 zfs_pools:
   - name: tank
     mountpoint: /mnt/tank
+zfs_home: /mnt/tank/home    # dataset for $HOME
 
 ######################
 ###  buluma.mount  ###
@@ -48,7 +49,6 @@ docker_users:
 ###  geerlingguy.nfs  ###
 #########################
 nfs_exports:
-  #-"/srv/nfs               10.255.255.0/24(rw,sync,no_subtree_check,crossmnt)"
   - "/srv/nfs/appdata       10.255.255.0/24(rw,sync,no_subtree_check)"
   - "/srv/nfs/media         10.255.255.0/24(rw,sync,no_subtree_check)"
   - "/srv/nfs/vm-backups    10.255.255.10/32(rw,sync,no_subtree_check,no_root_squash)"
@@ -86,7 +86,7 @@ samba_guest_account: nobody
 samba_load_homes: true  # shares user $HOME automatically
 samba_log: /var/log/samba.log
 samba_log_level: 1
-samba_global_include: samba-global.conf  # in master templates dir
+samba_global_include: samba/samba-global.conf  # in master templates dir
 samba_shares:
   - name: media
     comment: A place for pirates.
@@ -99,4 +99,4 @@ samba_shares:
     # This may make a literal "%U" directory to serve, vs. extrapolating to the Samba user.
     # Manually correcting the file and restarting the process can fix.  Not sure why.
     path: "/mnt/tank/backups/timemachine/%U"
-    include_file: samba-timemachine.conf  # in master templates dir
+    include_file: samba/samba-timemachine.conf  # in master templates dir

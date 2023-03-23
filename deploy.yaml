@@ -4,31 +4,29 @@
   - hosts: all
     vars_files:
       - 'vars/vault.yaml'
+    
     roles:
-      #- dab-networking
       - dab-figurine
-      #- dab-dotfiles
-      #- dab-storage
-    tasks:
-     # Removes Ubuntu MOTD spam
-     - name: Remove Ubuntu MOTD spam
-       become: yes
-       ansible.builtin.file:
-         path: "/etc/update-motd.d/{{ item }}"
-         state: absent
-       loop:
-         - 80-livepatch
-         - 95-hwe-eol
-         - 10-help-text
-         - 50-motd-news
-       when: ansible_distribution == "Ubuntu"
 
-     - name: Remove Debian MOTD legalese
-       become: yes
-       ansible.builtin.file:
-         path: "/etc/motd"
-         state: absent
-       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+    tasks:
+      - name: Remove Ubuntu MOTD spam
+        become: yes
+        ansible.builtin.file:
+          path: "/etc/update-motd.d/{{ item }}"
+          state: absent
+        loop:
+          - 80-livepatch
+          - 95-hwe-eol
+          - 10-help-text
+          - 50-motd-news
+        when: ansible_distribution == "Ubuntu"
+
+      - name: Remove Debian MOTD legalese
+        become: yes
+        ansible.builtin.file:
+          path: "/etc/motd"
+          state: absent
+        when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
 
   #################
   ###  proxmox  ###
@@ -64,20 +62,19 @@
       - 'vars/vault.yaml'
     
     pre_tasks:
-      # Seemingly not worth writing a whole role to manage ZFS on one host.
-      # Ideally, just mount these pools manually before running playbook.
-      # If all the datasets are gone from ZFS, there's bigger problems.
+      # Checks to see if defined ZFS pools are mounted. Playbook fails if not.
+      # These pools should be mounted before running this playbook.
       - name: Ensure ZFS pool(s) are imported and mounted before proceeding
-        ansible.builtin.command:
-          cmd: "zpool list {{ item.name }} >/dev/null"
+        community.general.zpool_facts:
+          pool: "{{ item.name }}"
         loop: "{{ zfs_pools }}"
       
       # On the storage host, we're using an alternate path for /home.
       # The following tasks create a symlink for continuity.
-      - name: Making sure /mnt/tank/home exists
+      - name: Checking for existence of zfs_home directory
         ansible.builtin.stat:
-          path: /mnt/tank/home
-        register: tankhome
+          path: "{{ zfs_home }}"
+        register: zfshome
       
       - name: Discovering facts about /home
         ansible.builtin.stat:
@@ -86,11 +83,11 @@
       
       # These commands must be combined; if not, our users $HOME will
       # be absent and subsequent SSH connections in the playbook will fail.
-      - name: Move old /home out of the way and symlink /mnt/tank/home
+      - name: Symlink /home to zfs_home
         ansible.builtin.shell: 
-          cmd: "mv /home /home.orig && ln -sf /mnt/tank/home /home"
+          cmd: "mv /home /home.orig && ln -sf {{ zfs_home }} /home"
         when: 
-          - tankhome.stat.exists == True
+          - zfshome.stat.exists == True
           - oldhome.stat.islnk == False
     
     roles:
@@ -101,14 +98,14 @@
       - role: vladgh.samba.server
     
     tasks:
-      # Sanoid configuration for ZFS snapshots
+      # Sanoid configuration for automated ZFS snapshots
       - name: Create /etc/sanoid directory
         ansible.builtin.file:
           path: /etc/sanoid
           state: directory
           mode: 0755
 
-      - name: Copy sanoid configuration file
+      - name: Copy sanoid configuration template
         ansible.builtin.template:
           src: sanoid.conf.j2
           dest: /etc/sanoid/sanoid.conf

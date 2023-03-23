@@ -1,0 +1,19 @@
+---
+## Random plays for testing.
+
+  - hosts: chunky
+    
+    pre_tasks:
+      - name: Gathering facts about ZFS datasets
+        become: yes
+        community.general.zfs_facts:
+          dataset: "{{ item.name }}"
+        loop: "{{ zfs_pools }}"
+
+      - name: Print gathered information
+        ansible.builtin.debug:
+          msg: 'ZFS dataset {{ item.name }} consumes {{ item.used }} of disk space.'
+        loop: '{{ ansible_zfs_datasets }}'
+
+    roles:
+      - vladgh.samba.server

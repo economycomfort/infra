@@ -14,6 +14,11 @@
         ansible.builtin.debug:
           msg: 'ZFS dataset {{ item.name }} consumes {{ item.used }} of disk space.'
         loop: '{{ ansible_zfs_datasets }}'
-
+      
+      - name: Test template
+        template:
+          src: test.j2
+          dest: /tmp/test.j2
+    
     roles:
-      - vladgh.samba.server
+      #- vladgh.samba.server

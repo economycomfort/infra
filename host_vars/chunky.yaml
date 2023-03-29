@@ -11,10 +11,23 @@ ansible_python_interpreter: /usr/bin/python3
 # Frankly, not worth writing a whole role to do this, since any data on them
 # shouldn't go away -- if we're reprovisioning a whole ZFS pool from scratch,
 # something else has happened to require manual intervention.
-zfs_pools:
+zpools:
   - name: tank
     mountpoint: /mnt/tank
-zfs_home: /mnt/tank/home    # dataset for $HOME
+
+zdatasets:
+  - name: tank/appdata
+    mountpoint: /mnt/tank/appdata
+  - name: tank/home
+    mountpoint: /mnt/tank/home
+  - name: tank/backups
+    mountpoint: /mnt/tank/backups
+  - name: tank/media
+    mountpoint: /mnt/tank/media
+  - name: tank/test
+    mountpoint: /mnt/tank/test
+
+zhome: /mnt/tank/home    # dataset for /home
 
 ######################
 ###  buluma.mount  ###

@@ -8,17 +8,22 @@
         become: yes
         community.general.zfs_facts:
           dataset: "{{ item.name }}"
-        loop: "{{ zfs_pools }}"
+          recurse: false
+        loop: "{{ zdatasets }}"
+        register: dab_datasets
 
-      - name: Print gathered information
-        ansible.builtin.debug:
-          msg: 'ZFS dataset {{ item.name }} consumes {{ item.used }} of disk space.'
-        loop: '{{ ansible_zfs_datasets }}'
-      
-      - name: Test template
-        template:
-          src: test.j2
-          dest: /tmp/test.j2
-    
+      - set_fact:
+          mount_status: "{{ dab_datasets.results | map(attribute='ansible_facts') | flatten | map(attribute='ansible_zfs_datasets') | flatten | map(attribute='mounted') }}"
+          mount_name: "{{ zdatasets | map(attribute='name') }}"
+
+      - name: Fail if a ZFS dataset is not mounted.
+        fail:
+          msg: "{{ mount_name[ansible_loop.index0] }} is not mounted!"
+        loop: "{{ mount_name }}"
+        loop_control: 
+          extended: true
+        when: mount_status[ansible_loop.index0] == 'no'
+
+
     roles:
       #- vladgh.samba.server

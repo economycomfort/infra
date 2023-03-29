@@ -67,13 +67,34 @@
       - name: Ensure ZFS pool(s) are imported and mounted before proceeding
         community.general.zpool_facts:
           pool: "{{ item.name }}"
-        loop: "{{ zfs_pools }}"
+        loop: "{{ zpools }}"
       
+      # Ensures that defined ZFS datasets are mounted.
+      - name: Gathering facts about ZFS datasets
+        become: yes
+        community.general.zfs_facts:
+          dataset: "{{ item.name }}"
+          recurse: false
+        loop: "{{ zdatasets }}"
+        register: dab_datasets
+
+      - set_fact:
+          mount_status: "{{ dab_datasets.results | map(attribute='ansible_facts') | flatten | map(attribute='ansible_zfs_datasets') | flatten | map(attribute='mounted') }}"
+          mount_name: "{{ zdatasets | map(attribute='name') }}"
+
+      - name: Fail if a ZFS dataset is not mounted.
+        fail:
+          msg: "{{ mount_name[ansible_loop.index0] }} is not mounted!"
+        loop: "{{ mount_name }}"
+        loop_control: 
+          extended: true
+        when: mount_status[ansible_loop.index0] == 'no'
+
       # On the storage host, we're using an alternate path for /home.
       # The following tasks create a symlink for continuity.
-      - name: Checking for existence of zfs_home directory
+      - name: Checking for existence of zhome directory
         ansible.builtin.stat:
-          path: "{{ zfs_home }}"
+          path: "{{ zhome }}"
         register: zfshome
       
       - name: Discovering facts about /home
@@ -83,9 +104,9 @@
       
       # These commands must be combined; if not, our users $HOME will
       # be absent and subsequent SSH connections in the playbook will fail.
-      - name: Symlink /home to zfs_home
+      - name: Symlink /home to zhome
         ansible.builtin.shell: 
-          cmd: "mv /home /home.orig && ln -sf {{ zfs_home }} /home"
+          cmd: "mv /home /home.orig && ln -sf {{ zhome }} /home"
         when: 
           - zfshome.stat.exists == True
           - oldhome.stat.islnk == False

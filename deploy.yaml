@@ -52,7 +52,7 @@
       - name: Copy proxmox configuration backup script
         ansible.builtin.template:
           src: "proxmox/pvehost-backup.j2"
-          dest: "/etc/cron.daily"
+          dest: "/etc/cron.daily/pvehost-backup"
           mode: 0755
 
     roles:

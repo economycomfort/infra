@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Sets up git pre-commit hook to ensure that files with sensitive content
-# is encrypted prior to commit.
+# are encrypted prior to commit.
 #
 # Credit to Nick Busey from HomelabOS:
 # https://gitlab.com/NickBusey/HomelabOS/-/issues/355

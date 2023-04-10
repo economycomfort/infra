@@ -56,10 +56,10 @@
           mode: 0755
 
     roles:
-      #- role: grog.package
+      - role: grog.package
       - role: geerlingguy.ntp
       #- role: proxmox_nag_removal
-      #- role: simoncaron.pve_addons
+      - role: simoncaron.pve_addons
  
   ################
   ###  chunky  ###

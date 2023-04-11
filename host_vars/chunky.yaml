@@ -95,10 +95,12 @@ package_list:
 #############################
 # Make sure the smb.conf template handles {{ ansible_managed }} appropriately at the top.
 samba_apple_extensions: yes
+samba_mitigate_cve_2017_7494: false  # mitigation unneeded and breaks share browsing
 samba_guest_account: nobody
 samba_load_homes: true  # shares user $HOME automatically
 samba_log: /var/log/samba.log
 samba_log_level: 1
+samba_log_size: 10000
 samba_global_include: samba/samba-global.conf  # in master templates dir
 samba_shares:
   - name: media

@@ -1,0 +1,65 @@
+---
+target_os: ubuntu
+ansible_become: yes
+ansible_user: david
+ansible_python_interpreter: /usr/bin/python3
+
+############################
+###  geerlingguy.docker  ###
+############################
+docker_edition: "ce"
+docker_packages_state: latest
+docker_install_compose_plugin: true
+docker_compose_package: docker-compose-plugin
+docker_compose_package_state: latest
+docker_users: 
+  - david
+
+######################
+###  grog.package  ###
+###################### 
+package_list:
+  - name: avahi-daemon
+  - name: fio
+  - name: iftop
+  - name: iotop
+  - name: mc
+  - name: ncdu
+  - name: net-tools
+  - name: nfs-kernel-server
+  - name: nmap
+  - name: qemu-guest-agent
+  - name: python3
+  - name: sanoid
+  - name: smartmontools
+  - name: ssh-import-id
+  - name: tmux
+  - name: tree
+  - name: zfsutils-linux
+  - name: zsh
+
+#############################
+###  vladgh.samba.server  ###
+#############################
+# Make sure the smb.conf template handles {{ ansible_managed }} appropriately at the top.
+samba_mitigate_cve_2017_7494: false  # mitigation not needed (and breaks share browsing)
+samba_apple_extensions: yes
+samba_guest_account: nobody
+samba_load_homes: true  # shares user $HOME automatically
+samba_log: /var/log/samba.log
+samba_log_level: 3
+samba_log_size: 10000
+#samba_global_include: samba/samba-global.conf  # in master templates dir
+#samba_shares:
+#  - name: media
+#    comment: A place for pirates.
+#    path: /mnt/tank/media
+#    public: false
+#    guest_ok: false
+#    writable: true
+#  - name: timemachine
+#    comment: MacOS backups.
+#    # This may make a literal "%U" directory to serve, vs. extrapolating to the Samba user.
+#    # Manually correcting the file and restarting the process can fix.  Not sure why.
+#    path: "/mnt/tank/backups/timemachine/%U"
+#    include_file: samba/samba-timemachine.conf  # in master templates dir

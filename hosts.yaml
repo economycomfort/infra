@@ -14,6 +14,10 @@ all:
     # GCP      
     sandbox:
       ansible_host: sandbox.brooks.haus
+
+    # Yoshi
+    yoshi:
+      ansible_host: 192.168.69.105
   
   children: # groups of hosts
     

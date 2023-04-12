@@ -1,4 +1,7 @@
-# Galaxy
+# Requirements from Ansible Galaxy
+# https://galaxy.ansible.com
+#
+
 collections:
   - name: community.general
   - name: vladgh.samba
@@ -6,6 +9,7 @@ collections:
 roles:
   - name: buluma.mount
   - name: geerlingguy.docker
+  - name: geerlingguy.dotfiles
   - name: geerlingguy.github-users
   - name: geerlingguy.nfs
   - name: geerlingguy.ntp

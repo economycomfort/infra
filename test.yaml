@@ -1,16 +1,11 @@
 ---
 ## Random plays for testing.
 
-  - hosts: chunky
+  - hosts: yoshi
     vars_files:
       - 'vars/vault.yaml'
-    
-    pre_tasks:
-      - name: DEBUG show samba_users
-        debug:
-          msg: "User is {{ item.name }}"
-        loop: "{{ samba_users }}"
+    become: yes
 
     roles:
-      #- bertvv.samba
-      - vladgh.samba.server
+      #- { role: geerlingguy.dotfiles, become: no }
+      - role: vladgh.samba.server

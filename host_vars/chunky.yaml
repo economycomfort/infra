@@ -1,6 +1,5 @@
 ---
 target_os: ubuntu
-ansible_become: yes
 ansible_user: david
 ansible_python_interpreter: /usr/bin/python3
 
@@ -95,7 +94,7 @@ package_list:
 #############################
 # Make sure the smb.conf template handles {{ ansible_managed }} appropriately at the top.
 samba_apple_extensions: yes
-samba_mitigate_cve_2017_7494: false  # mitigation unneeded and breaks share browsing
+#samba_mitigate_cve_2017_7494: false  # mitigation unneeded and breaks share browsing
 samba_guest_account: nobody
 samba_load_homes: true  # shares user $HOME automatically
 samba_log: /var/log/samba.log

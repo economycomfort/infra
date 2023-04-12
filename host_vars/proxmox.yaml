@@ -1,6 +1,5 @@
 ---
 target_os: debian
-ansible_become: no
 ansible_user: root  # key only
 ansible_python_interpreter: /usr/bin/python3
 

@@ -14,3 +14,10 @@ Thanks to [Alex Kretzschmar](https://github.com/ironicbadger)'s various blog  po
   `ansible-galaxy install -r requirements.yaml`
 
 Edit away.
+
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Licensed under the MIT License.
+See [LICENSE](LICENSE) file.

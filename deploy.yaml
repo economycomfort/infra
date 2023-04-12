@@ -2,15 +2,16 @@
 ## Handles initial deployment and configuration of defined hosts.
 
   - hosts: all
+    become: yes
     vars_files:
       - 'vars/vault.yaml'
     
     roles:
-      - dab-figurine
+      - role: dab-figurine
+      #- { geerlingguy.dotfiles, become: no }
 
     tasks:
       - name: Remove Ubuntu MOTD spam
-        become: yes
         ansible.builtin.file:
           path: "/etc/update-motd.d/{{ item }}"
           state: absent
@@ -22,7 +23,6 @@
         when: ansible_distribution == "Ubuntu"
 
       - name: Remove Debian MOTD legalese
-        become: yes
         ansible.builtin.file:
           path: "/etc/motd"
           state: absent
@@ -36,7 +36,6 @@
       # Passes through primary user to be able to log in to web interface.
       # Needs a user created (probably david) and passwordless sudo.
       - name: Add proxmox web interface users
-        become: yes
         ansible.builtin.template:
           src: "proxmox/user.cfg.j2"  # relative to main playbook dir
           dest: "/etc/pve/user.cfg"
@@ -58,13 +57,13 @@
     roles:
       - role: grog.package
       - role: geerlingguy.ntp
-      #- role: proxmox_nag_removal
       - role: simoncaron.pve_addons
  
   ################
   ###  chunky  ###
   ################
   - hosts: chunky
+    become: yes
     vars_files:
       - 'vars/vault.yaml'
     
@@ -78,7 +77,6 @@
       
       # Ensures that defined ZFS datasets are mounted.
       - name: Gathering facts about ZFS datasets
-        become: yes
         community.general.zfs_facts:
           dataset: "{{ item.name }}"
           recurse: false
@@ -124,7 +122,8 @@
       - role: geerlingguy.docker
       - role: geerlingguy.nfs
       - role: vladgh.samba.server
-    
+      #- role: { geerlingguy.dotfiles, become: no }
+
     tasks:
       # Sanoid configuration for automated ZFS snapshots
       - name: Create /etc/sanoid directory
@@ -145,17 +144,27 @@
   ###  homebot  ###
   #################
   - hosts: homebot
+    become: yes
     vars_files:
       - 'vars/vault.yaml'
     roles:
       - role: grog.package
       - role: geerlingguy.docker
 
+  ##############
+  ###  yoshi  ##
+  ##############
+  - hosts: yoshi
+    become: yes
+    roles:
+      - role: vladgh.samba.server
+      - { role: geerlingguy.dotfiles, become: no }
+  
   #################
   ###  sandbox  ###
   #################
   - hosts: sandbox
-    tasks:
+    become: yes
     roles:
       - role: grog.package
 
@@ -163,9 +172,8 @@
   ###  Vectra Hosts  ###
   ######################
   - hosts: vectra
+    become: yes
     tasks:
       - name: Ensure correct hostname
         ansible.builtin.hostname:
           name: "{{ inventory_hostname }}"
-        become: yes
-    roles:

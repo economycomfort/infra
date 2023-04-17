@@ -15,6 +15,7 @@ package_list:
   - name: qemu-guest-agent  # Proxmox/QEMU
   - name: ssh-import-id
   - name: tmux
+  - name: toilet
   - name: tree
   - name: wget
   - name: zsh

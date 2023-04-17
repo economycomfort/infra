@@ -4,6 +4,9 @@ chunky:
 yoshi:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit yoshi
 
+sandbox:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit sandbox
+
 proxmox:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit proxmox
 

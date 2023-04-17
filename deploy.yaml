@@ -7,8 +7,8 @@
       - 'vars/vault.yaml'
     
     roles:
-      - role: dab-figurine
-      #- { geerlingguy.dotfiles, become: no }
+      - role: grog.package
+      - { role: dab-dotfiles, become: no }
 
     tasks:
       - name: Remove Ubuntu MOTD spam
@@ -55,7 +55,6 @@
           mode: 0755
 
     roles:
-      - role: grog.package
       - role: geerlingguy.ntp
       - role: simoncaron.pve_addons
  
@@ -88,7 +87,7 @@
           mount_name: "{{ zdatasets | map(attribute='name') }}"
 
       - name: Fail if a ZFS dataset is not mounted.
-        fail:
+        ansible.builtin.fail:
           msg: "{{ mount_name[ansible_loop.index0] }} is not mounted!"
         loop: "{{ mount_name }}"
         loop_control: 
@@ -118,11 +117,9 @@
     
     roles:
       - role: buluma.mount
-      - role: grog.package
       - role: geerlingguy.docker
       - role: geerlingguy.nfs
       - role: vladgh.samba.server
-      #- role: { geerlingguy.dotfiles, become: no }
 
     tasks:
       # Sanoid configuration for automated ZFS snapshots
@@ -148,7 +145,6 @@
     vars_files:
       - 'vars/vault.yaml'
     roles:
-      - role: grog.package
       - role: geerlingguy.docker
 
   ##############
@@ -158,7 +154,6 @@
     become: yes
     roles:
       - role: vladgh.samba.server
-      - { role: geerlingguy.dotfiles, become: no }
   
   #################
   ###  sandbox  ###
@@ -166,7 +161,6 @@
   - hosts: sandbox
     become: yes
     roles:
-      - role: grog.package
 
   ######################
   ###  Vectra Hosts  ###

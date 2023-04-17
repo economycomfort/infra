@@ -17,10 +17,10 @@ docker_users:
 ##############################
 ###  geerlingguy.dotfiles  ###
 ##############################
-dotfiles_repo: "https://github.com/geerlingguy/dotfiles.git"
-dotfiles_repo_version: master
+dotfiles_repo: "https://github.com/economycomfort/dotfiles.git"
+dotfiles_repo_version: main
 #dotfiles_repo_accept_hostkey: no
-dotfiles_repo_local_destination: "~/git/dotfiles"
+dotfiles_repo_local_destination: "~/.dotfiles"
 dotfiles_home: "~"
 dotfiles_files:
   - .zshrc
@@ -46,6 +46,7 @@ package_list:
   - name: sanoid
   - name: smartmontools
   - name: ssh-import-id
+  - name: toilet
   - name: tmux
   - name: tree
   - name: zfsutils-linux

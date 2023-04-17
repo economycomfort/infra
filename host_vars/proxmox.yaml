@@ -19,6 +19,7 @@ package_list:
   - name: libguestfs-tools
   - name: net-tools
   - name: ssh-import-id
+  - name: toilet
   - name: tree
   - name: wget
   - name: zsh

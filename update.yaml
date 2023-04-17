@@ -4,7 +4,6 @@
   - hosts: proxmox
     tasks:
     roles:
-      #- role: proxmox_nag_removal
       - role: simoncaron.pve_addons
 
   - hosts: srv:proxmox
@@ -18,8 +17,6 @@
 
      - name: update packages
        become: yes
-       package:
+       ansible.builtin.package:
          name: '*'
          state: latest
-
-     # update docker-compose?      

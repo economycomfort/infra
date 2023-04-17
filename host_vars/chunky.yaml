@@ -85,6 +85,7 @@ package_list:
   - name: smartmontools
   - name: ssh-import-id
   - name: tmux
+  - name: toilet
   - name: tree
   - name: zfsutils-linux
   - name: zsh

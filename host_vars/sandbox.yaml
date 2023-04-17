@@ -3,13 +3,6 @@ target_os: debian
 ansible_user: david  # key only
 ansible_python_interpreter: /usr/bin/python3
 
-
-######################
-###  dab-figurine  ###
-######################
-figurine_name: sandbox
-
-
 ######################
 ###  grog.package  ###
 ###################### 
@@ -17,4 +10,5 @@ package_list:
   - name: curl
   - name: git
   - name: irssi
+  - name: toilet
   - name: zsh

@@ -1,22 +1,32 @@
 ---
-## Handles installing various dotfiles.
+## Handles installing dotfiles from a git repo.
+## Specific to https://github.com/economycomfort/dotfiles, though any dotfile 
+## repo with a single install script could likely be used.
 
-- name: Clone economycomfort/dotfiles repo from Github
+- name: Clone dotfiles repo
   ansible.builtin.git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_dest }}"
     update: yes
     recursive: "{{ dotfiles_recursive | default('yes') }}"
-  vars: 
-    ansible_become: "{{ dotfiles_become | default('no') }}"
+  become: "{{ dotfiles_become | default('no') }}"
 
-- name: Run dotfiles bootstrap script
-  ansible.builtin.shell:
-    cmd: "{{ dotfiles_bootstrap }}"
-  vars:
-    ansible_become: "{{ dotfiles_become | default('no') }}"
+- name: Run dotfiles install script
+  ansible.builtin.command: "{{ dotfiles_install }}"
+  become: "{{ dotfiles_become | default('no') }}"
 
-- name: Make zsh default shell
+- name: Get zsh location
+  ansible.builtin.command: which zsh
+  register: zsh_location
+  when: dotfiles_chsh
+  become: "{{ dotfiles_become | default('no') }}"
+
+- name: Set default shell to zsh
   ansible.builtin.user:
     name: "{{ ansible_user }}"
-    shell: "{{ lookup('pipe', 'which zsh') }}"
+    shell: "{{ zsh_location.stdout }}"
+  when: 
+    - zsh_location.stdout is defined
+    - zsh_location.rc == 0
+    - dotfiles_chsh
+  become: yes

@@ -2,10 +2,16 @@
 ## Random plays for testing.
 
   - hosts: yoshi
-    vars_files:
-      - 'vars/vault.yaml'
+    #vars_files:
+    #  - 'vars/vault.yaml'
     become: yes
 
+    #tasks:
+    #- name: Show info
+    #  debug:
+    #    msg: "{{ dotfiles_dest }}"
+
     roles:
+      - { role: dab-dotfiles, become: no }
       #- { role: geerlingguy.dotfiles, become: no }
-      - role: vladgh.samba.server
+      #- role: vladgh.samba.server

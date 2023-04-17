@@ -2,8 +2,3 @@
 target_os: debian
 ansible_user: kali  # key only
 ansible_python_interpreter: /usr/bin/python3
-
-######################
-###  dab-figurine  ###
-######################
-figurine_name: kali-partner

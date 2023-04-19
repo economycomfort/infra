@@ -27,12 +27,12 @@ package_list:
 #########################
 ###  geerlingguy.ntp  ###
 #########################
-ntp_enabled: true
+ntp_enabled: yes
 ntp_timezone: America/New_York
 ntp_package: chrony     # ntp or chrony
 ntp_daemon: chrony
 ntp_config_file: /etc/chrony/chrony.conf
-ntp_manage_config: true # allow role to manage NTP config
+ntp_manage_config: yes # allow role to manage NTP config
 ntp_servers: 
   - "time.cloudflare.com iburst"
   - "time.google.com iburst"
@@ -40,8 +40,8 @@ ntp_servers:
 ###############################
 ###  simoncaron.pve_addons  ###
 ###############################
-pve_addons_enable_dark_theme: false
-pve_addons_remove_subscription_nag: true
-pve_addons_disable_enterprise_repo: false
-pve_addons_remove_enterprise_repo: true
-pve_addons_add_no_subscription_repo: true
+pve_addons_enable_dark_theme: no
+pve_addons_remove_subscription_nag: yes
+pve_addons_disable_enterprise_repo: no
+pve_addons_remove_enterprise_repo: yes
+pve_addons_add_no_subscription_repo: yes

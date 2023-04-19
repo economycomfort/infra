@@ -1,6 +1,9 @@
 ---
 ## Handles updating access and packages on defined hosts.
 
+  - hosts: all
+    become: yes
+
   - hosts: proxmox
     tasks:
     roles:
@@ -8,15 +11,18 @@
 
   - hosts: srv:proxmox
     tasks:
-     - name: import keys from github
-       become: yes
-       ansible.posix.authorized_key:
-         user: "{{ ansible_user }}"
-         state: present
-         key: https://github.com/economycomfort.keys
+      - name: import keys from github
+        become: yes
+        ansible.posix.authorized_key:
+          user: "{{ ansible_user }}"
+          state: present
+          key: https://github.com/economycomfort.keys
 
-     - name: update packages
-       become: yes
-       ansible.builtin.package:
-         name: '*'
-         state: latest
+      - name: update packages
+        become: yes
+        ansible.builtin.package:
+          name: '*'
+          state: latest
+          
+    roles:
+      - role: dab-motd

@@ -1,7 +1,0 @@
-# Managed by Ansible - do not update manually.
-
-# Storage network
-allow-hotplug {{ storage_interface }}
-iface {{ storage_interface }} inet static
-    address {{ storage_ip }}
-    mtu 9000

@@ -25,7 +25,7 @@ package_list:
 ############################
 docker_edition: "ce"
 docker_packages_state: latest
-docker_install_compose_plugin: true
+docker_install_compose_plugin: yes
 docker_compose_package: docker-compose-plugin
 docker_compose_package_state: latest
 docker_users: 

@@ -12,7 +12,14 @@
     - 95-hwe-eol
     - 10-help-text
     - 50-motd-news
+    - 90-updates-available
   when: ansible_distribution == "Ubuntu"
+  become: yes
+
+#- name: Regenerate Ubuntu MOTD
+#  ansible.builtin.command: /usr/sbin/update-motd
+#  when: ansible_distribution == "Ubuntu"
+#  become: yes
 
 - name: Remove Debian MOTD legalese
   ansible.builtin.file:
@@ -20,3 +27,4 @@
     state: absent
   when: (ansible_distribution == "Debian") or 
         (ansible_distribution == "Kali")
+  become: yes

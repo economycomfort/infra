@@ -9,20 +9,25 @@
     roles:
       - role: simoncaron.pve_addons
 
-  - hosts: srv:proxmox
+  - hosts: srv:pihole:proxmox
+    become: yes
     tasks:
       - name: import keys from github
-        become: yes
         ansible.posix.authorized_key:
           user: "{{ ansible_user }}"
           state: present
           key: https://github.com/economycomfort.keys
 
       - name: update packages
-        become: yes
         ansible.builtin.package:
           name: '*'
           state: latest
           
     roles:
       - role: dab-motd
+
+  - hosts: pihole
+    tasks:
+    - name: update pihole
+      command: 'pihole -up'
+

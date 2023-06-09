@@ -19,27 +19,50 @@
       # Passes through primary user to be able to log in to web interface.
       # Needs a user created (probably david) and passwordless sudo.
       - name: Add proxmox web interface users
-        ansible.builtin.template:
-          src: "proxmox/user.cfg.j2"  # relative to main playbook dir
-          dest: "/etc/pve/user.cfg"
+        template:
+          src: proxmox/user.cfg.j2  # relative to main playbook dir
+          dest: /etc/pve/user.cfg
       
       # Copies shell script which eases cloud-init template creation    
       - name: Copy cloud-init template deployment script
-        ansible.builtin.template:
-          src: "proxmox/deploy-cloud-init-template.sh.j2"
-          dest: "/root/deploy-cloud-init-template.sh"
+        template:
+          src: proxmox/deploy-cloud-init-template.sh.j2
+          dest: /root/deploy-cloud-init-template.sh
           mode: 0744
 
       # Copies proxmox config backup script
       - name: Copy proxmox configuration backup script
-        ansible.builtin.template:
-          src: "proxmox/pvehost-backup.j2"
-          dest: "/etc/cron.daily/pvehost-backup"
+        template:
+          src: proxmox/pvehost-backup.j2
+          dest: /etc/cron.daily/pvehost-backup
           mode: 0755
 
+      # Add required IOMMU kernel modules
+      - name: Add required IOMMU kernel modules
+        template:
+          src: proxmox/iommu.j2
+          dest: /etc/modules-load.d/iommu.conf
+          mode: 0644
+
+      # Modify GRUB config to enable IOMMU (hardware passthrough)
+      - name: Enable IOMMU in GRUB config
+        lineinfile:
+          path: /etc/default/grub
+          regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+          line: GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt"
+
+      # Update GRUB
+      - name: Update GRUB
+        command: update-grub
+
+      # Warn about reboot required
+      - name: REBOOT REQUIRED
+        ansible.builtin.debug:
+          msg: "NOTICE: REBOOT REQUIRED TO ENABLE HARDWARE PASSTHROUGH"
+
     roles:
-      - role: geerlingguy.ntp
       - role: simoncaron.pve_addons
+      - role: geerlingguy.ntp
  
   ################
   ###  chunky  ###

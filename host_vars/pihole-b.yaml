@@ -1,0 +1,47 @@
+---
+target_os: debian
+ansible_user: david
+ansible_python_interpreter: /usr/bin/python3
+
+############################
+###  geerlingguy.docker  ###
+############################
+docker_edition: "ce"
+docker_packages_state: latest
+docker_install_compose_plugin: yes
+docker_compose_package: docker-compose-plugin
+docker_compose_package_state: latest
+docker_users: 
+  - "{{ main_username }}"
+
+##############################
+###  geerlingguy.dotfiles  ###
+##############################
+dotfiles_repo: "https://github.com/economycomfort/dotfiles.git"
+dotfiles_repo_version: main
+#dotfiles_repo_accept_hostkey: no
+dotfiles_repo_local_destination: "~/.dotfiles"
+dotfiles_home: "~"
+dotfiles_files:
+  - .zshrc
+  - .gitignore
+  - .inputrc
+  - .vimrc
+
+######################
+###  grog.package  ###
+###################### 
+package_list:
+  - name: curl
+  - name: fio
+  - name: git
+  - name: htop
+  - name: iftop
+  - name: net-tools
+  - name: nmap
+  - name: python3
+  - name: ssh-import-id
+  - name: toilet
+  - name: tmux
+  - name: tree
+  - name: zsh

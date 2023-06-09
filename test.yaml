@@ -1,7 +1,7 @@
 ---
 ## Random plays for testing.
 
-  - hosts: homebot
+  - hosts: pve
     #vars_files:
     #  - 'vars/vault.yaml'
     become: yes
@@ -12,7 +12,4 @@
     #    msg: "{{ dotfiles_dest }}"
 
     roles:
-      - grog.package
-      - { role: dab-dotfiles, become: no }
-      #- { role: geerlingguy.dotfiles, become: no }
-      #- role: vladgh.samba.server
+      - geerlingguy.ntp

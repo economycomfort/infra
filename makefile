@@ -10,6 +10,9 @@ sandbox:
 proxmox:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit proxmox
 
+pve:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit pve
+
 deploy:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password
 

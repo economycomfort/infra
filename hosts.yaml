@@ -11,6 +11,10 @@ all:
     proxmox:
       ansible_host: 192.168.20.10
 
+    # PVE
+    #pve:
+    #  ansible_host: 192.168.20.15
+
     # GCP      
     sandbox:
       ansible_host: sandbox.brooks.haus
@@ -18,6 +22,10 @@ all:
     # Yoshi
     yoshi:
       ansible_host: 192.168.69.105
+
+    # lxc-test
+    lxc-test:
+      ansible_host: 192.168.69.108
   
   children: # groups of hosts
     
@@ -28,6 +36,14 @@ all:
           ansible_host: 192.168.20.200
         homebot:
           ansible_host: 192.168.20.201
+    
+    # pihole
+    pihole:
+      hosts:
+        pihole-a:
+          ansible_host: 192.168.69.10
+        pihole-b:
+          ansible_host: 192.168.69.11
 
     # vectra hosts
     vectra:

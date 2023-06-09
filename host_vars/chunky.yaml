@@ -70,6 +70,7 @@ nfs_exports:
 ###################### 
 package_list:
   - name: avahi-daemon
+  - name: btop
   - name: fio
   - name: iftop
   - name: iotop

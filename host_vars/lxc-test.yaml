@@ -1,5 +1,5 @@
 ---
-target_os: ubuntu
+target_os: debian
 ansible_user: david
 ansible_python_interpreter: /usr/bin/python3
 
@@ -32,24 +32,17 @@ dotfiles_files:
 ###  grog.package  ###
 ###################### 
 package_list:
-  - name: avahi-daemon
+  - name: curl
   - name: fio
+  - name: git
   - name: iftop
-  - name: iotop
-  - name: mc
-  - name: ncdu
   - name: net-tools
-  - name: nfs-kernel-server
   - name: nmap
-  - name: qemu-guest-agent
   - name: python3
-  - name: sanoid
-  - name: smartmontools
   - name: ssh-import-id
   - name: toilet
   - name: tmux
   - name: tree
-  - name: zfsutils-linux
   - name: zsh
 
 #############################

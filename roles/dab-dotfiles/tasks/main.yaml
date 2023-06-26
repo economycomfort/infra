@@ -4,7 +4,7 @@
 ## repo with a single install script could likely be used.
 
 - name: Clone dotfiles repo
-  ansible.builtin.git:
+  git:
     repo: "{{ dotfiles_repo }}"
     dest: "{{ dotfiles_dest }}"
     update: yes
@@ -12,17 +12,17 @@
   become: "{{ dotfiles_become | default('no') }}"
 
 - name: Run dotfiles install script
-  ansible.builtin.command: "{{ dotfiles_install }}"
+  command: "{{ dotfiles_install }}"
   become: "{{ dotfiles_become | default('no') }}"
 
 - name: Get zsh location
-  ansible.builtin.command: which zsh
+  command: which zsh
   register: zsh_location
   when: dotfiles_chsh
   become: "{{ dotfiles_become | default('no') }}"
 
 - name: Set default shell to zsh
-  ansible.builtin.user:
+  user:
     name: "{{ ansible_user }}"
     shell: "{{ zsh_location.stdout }}"
   when: 

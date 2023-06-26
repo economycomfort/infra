@@ -21,8 +21,12 @@ zdatasets:
     mountpoint: /mnt/fast/appdata
   - name: fast/home
     mountpoint: /mnt/fast/home
-  - name: tank/backups
-    mountpoint: /mnt/tank/backups
+  - name: tank/fast-backups
+    mountpoint: /mnt/tank/fast-backups
+  - name: tank/timemachine
+    mountpoint: /mnt/tank/timemachine
+  - name: tank/proxmox
+    mountpoint: /mnt/tank/proxmox
   - name: tank/media
     mountpoint: /mnt/tank/media
 
@@ -34,7 +38,7 @@ zhome: /mnt/fast/home    # dataset for /home
 # We're only creating bind mounts on this host, not mounting remote filesystems.
 mount_requests:
   - path: /srv/nfs/proxmox
-    src: /mnt/tank/backups/proxmox
+    src: /mnt/tank/proxmox
     opts: "bind,defaults,nofail,x-systemd.requires=zfs-mount.service"
     fstype: none
   - path: /srv/nfs/media
@@ -107,7 +111,7 @@ samba_load_homes: yes  # shares user $HOME automatically
 samba_log: /var/log/samba.log
 samba_log_level: 1
 samba_log_size: 10000
-samba_global_include: samba/samba-global.conf  # in master templates dir
+samba_global_include: servo/samba/samba-global.conf  # in master templates dir
 samba_shares:
   - name: media
     comment: A place for pirates.
@@ -119,5 +123,5 @@ samba_shares:
     comment: MacOS backups.
     # This may make a literal "%U" directory to serve, vs. extrapolating to the Samba user.
     # Manually correcting the file and restarting the process can fix.  Not sure why.
-    path: "/mnt/tank/backups/timemachine/%U"
-    include_file: samba/samba-timemachine.conf  # in master templates dir
+    path: "/mnt/tank/timemachine/%U"
+    include_file: servo/samba/samba-timemachine.conf  # in master templates dir

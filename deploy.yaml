@@ -73,7 +73,7 @@
 
       # Warn about reboot required
       - name: REBOOT REQUIRED
-        ansible.builtin.debug:
+        debug:
           msg: "NOTICE: REBOOT REQUIRED TO ENABLE HARDWARE PASSTHROUGH"
 
     roles:
@@ -109,7 +109,7 @@
           mount_name: "{{ zdatasets | map(attribute='name') }}"
 
       - name: Fail if a ZFS dataset is not mounted.
-        ansible.builtin.fail:
+        fail:
           msg: "{{ mount_name[ansible_loop.index0] }} is not mounted!"
         loop: "{{ mount_name }}"
         loop_control: 
@@ -119,19 +119,19 @@
       # On the storage host, we're using an alternate path for /home.
       # The following tasks create a symlink for continuity.
       - name: Checking for existence of zhome directory
-        ansible.builtin.stat:
+        stat:
           path: "{{ zhome }}"
         register: zfshome
       
       - name: Discovering facts about /home
-        ansible.builtin.stat:
+        stat:
           path: /home
         register: oldhome
       
       # These commands must be combined; if not, our users $HOME will
       # be absent and subsequent SSH connections in the playbook will fail.
       - name: Symlink /home to zhome
-        ansible.builtin.shell: 
+        shell: 
           cmd: "mv /home /home.orig && ln -sf {{ zhome }} /home"
         when: 
           - zfshome.stat.exists == True
@@ -139,22 +139,30 @@
     
     roles:
       - role: buluma.mount
-      - role: geerlingguy.docker
-      #- role: geerlingguy.nfs
+      #- role: geerlingguy.docker
+      - role: geerlingguy.nfs
       - role: vladgh.samba.server
 
     tasks:
       # Sanoid configuration for automated ZFS snapshots
       - name: Create /etc/sanoid directory
-        ansible.builtin.file:
+        file:
           path: /etc/sanoid
           state: directory
           mode: 0755
 
       - name: Copy sanoid configuration template
-        ansible.builtin.template:
-          src: sanoid.conf.j2
+        template:
+          src: servo/sanoid/sanoid.conf.j2
           dest: /etc/sanoid/sanoid.conf
+          owner: root
+          group: root
+          mode: 0644
+
+      - name: Install syncoid cron
+        template:
+          src: servo/sanoid/syncoid-cron.j2
+          dest: /etc/cron.d/syncoid
           owner: root
           group: root
           mode: 0644
@@ -190,7 +198,7 @@
       - 'vars/vault.yaml'
     tasks:
       - name: "Install Pihole"
-        ansible.builtin.command: "curl -sSL https://install.pi-hole.net | bash"
+        command: "curl -sSL https://install.pi-hole.net | bash"
 
       #- name: 
   
@@ -208,5 +216,5 @@
     become: yes
     tasks:
       - name: Ensure correct hostname
-        ansible.builtin.hostname:
+        hostname:
           name: "{{ inventory_hostname }}"

@@ -6,7 +6,7 @@
 # Idea is that all these lists may not be defined, so this flattens the existing lists
 # into one big list-of-dicts (mountpoints).
 - name: Reticulating splines
-  ansible.builtin.set_fact:
+  set_fact:
     mountpoints: 
       "{{ bind_mounts | default([]) \
       + nfs_mounts | default([]) }}" 
@@ -14,7 +14,7 @@
     - mountpoints
 
 - name: Create mountpoints
-  ansible.builtin.file:
+  file:
     dest: "{{ item.mountpoint }}"
     state: directory
     owner: nobody
@@ -26,7 +26,7 @@
     - mountpoints
 
 - name: Mount NFS shares
-  ansible.builtin.mount:
+  mount:
     name: "{{ item.mountpoint }}"
     src: "{{ item.src }}"
     fstype: "{{ item.fstype | default('nfs4') }}"
@@ -40,7 +40,7 @@
     - mountpoints
 
 - name: Create bind mounts for NFS exports
-  ansible.builtin.mount:
+  mount:
     name: "{{ item.mountpoint }}"
     src: "{{ item.src }}"
     fstype: none
@@ -54,13 +54,13 @@
     - mountpoints
 
 - name: Check to see if ZFS is installed
-  ansible.builtin.package_facts:
+  package_facts:
     manager: "auto"
   tags:
     - zfs
 
 - name: Install docker override to wait for ZFS
-  ansible.builtin.template:
+  template:
     src: zfs-override.conf.j2
     dest: /etc/systemd/system/docker.service.d/override.conf
     owner: root

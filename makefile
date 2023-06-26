@@ -20,7 +20,7 @@ update:
 	ansible-playbook update.yaml
 
 test:
-	ansible-playbook test.yaml -vvvv
+	ansible-playbook test.yaml
 
 encrypt:
 	ansible-vault encrypt --vault-password-file .vault-password vars/vault.yaml

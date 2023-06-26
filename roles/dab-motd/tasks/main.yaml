@@ -2,7 +2,7 @@
 ## Remove unnecessary login messages.
 
 - name: Remove Ubuntu MOTD spam
-  ansible.builtin.file:
+  file:
     path: "/etc/update-motd.d/{{ item }}"
     state: absent
   loop:
@@ -17,12 +17,12 @@
   become: yes
 
 #- name: Regenerate Ubuntu MOTD
-#  ansible.builtin.command: /usr/sbin/update-motd
+#  command: /usr/sbin/update-motd
 #  when: ansible_distribution == "Ubuntu"
 #  become: yes
 
 - name: Remove Debian MOTD legalese
-  ansible.builtin.file:
+  file:
     path: "/etc/motd"
     state: absent
   when: (ansible_distribution == "Debian") or 

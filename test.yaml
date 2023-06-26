@@ -6,10 +6,25 @@
     #  - 'vars/vault.yaml'
     become: yes
 
-    #tasks:
-    #- name: Show info
-    #  debug:
-    #    msg: "{{ dotfiles_dest }}"
+    tasks:
+      # Sanoid configuration for automated ZFS snapshots
+      - name: Create /etc/sanoid directory
+        file:
+          path: /etc/sanoid
+          state: directory
+          mode: 0755
 
-    roles:
-      - geerlingguy.docker
+      - name: Copy sanoid configuration template
+        template:
+          src: sanoid.conf.j2
+          dest: /etc/sanoid/sanoid.conf
+          owner: root
+          group: root
+          mode: 0644
+
+      - name: Configure syncoid backups
+        template:
+          src: servo/
+
+    #roles:
+    #  - geerlingguy.docker

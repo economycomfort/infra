@@ -2,7 +2,7 @@
 ## Handles individual event-driven tasks.
 
 - name: Restart networking (Debian)
-  ansible.builtin.shell:
+  shell:
     cmd: |
       ip a flush {{ item.name }}
       ifdown {{ item.name }}
@@ -11,6 +11,6 @@
   when: ansible_distribution == 'Debian'
 
 - name: Restart networking (Ubuntu)
-  ansible.builtin.shell:
+  shell:
     cmd: netplan apply
   when: ansible_distribution == 'Ubuntu'

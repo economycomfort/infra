@@ -9,13 +9,13 @@
 
 # Ubuntu
 - name: Remove Ubuntu default configuration
-  ansible.builtin.command: 
+  command: 
     cmd: mv /etc/netplan/00-installer-config.yaml /etc/netplan/ORIG-installer-config.yaml
     removes: /etc/netplan/00-installer-config.yaml
   when: ansible_distribution == 'Ubuntu'
 
 - name: Configure interfaces (Ubuntu)
-  ansible.builtin.template:
+  template:
     src: template-Ubuntu.j2
     dest: "/etc/netplan/10-{{ item.name }}.yaml"  
   notify: Restart networking (Ubuntu)
@@ -25,13 +25,13 @@
 
 # Debian
 - name: Determining if original interface configuration exists (Debian)
-  ansible.builtin.stat:
+  stat:
     path: /etc/network/interfaces
   register: st
   when: ansible_distribution == 'Debian'
 
 - name: Copying original interface configuration for safekeeping (Debian)
-  ansible.builtin.copy:
+  copy:
     src: /etc/network/interfaces
     dest: /etc/network/interfaces.bak
     remote_src: yes
@@ -41,19 +41,19 @@
     - st.stat.exists == True
 
 - name: Delete old interface configuration (Debian)
-  ansible.builtin.file:
+  file:
     path: /etc/network/interfaces
     state: absent
   when: ansible_distribution == 'Debian'
 
 - name: Write new global interface configuration (Debian)
-  ansible.builtin.template:
+  template:
     src: template-Debian-global.j2
     dest: /etc/network/interfaces
   when: ansible_distribution == 'Debian'
 
 - name: Write new interface configuration(s) (Debian)
-  ansible.builtin.template:
+  template:
     src: template-Debian.j2
     dest: "/etc/network/interfaces.d/{{ item.name }}"  
   notify: Restart networking (Debian)
@@ -61,7 +61,7 @@
   when: ansible_distribution == 'Debian'
 
 - name: Configure nameservers (Debian)
-  ansible.builtin.template:
+  template:
     src: template-resolvconf.j2
     dest: /etc/resolv.conf
   when:

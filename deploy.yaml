@@ -6,6 +6,13 @@
     vars_files:
       - 'vars/vault.yaml'
     
+    pre_tasks:     
+      - name: import keys from github
+        ansible.posix.authorized_key:
+          user: "{{ ansible_user }}"
+          state: present
+          key: https://github.com/economycomfort.keys
+
     roles:
       - role: grog.package
       - role: dab-motd
@@ -14,7 +21,7 @@
   #################
   ###  proxmox  ###
   #################
-  - hosts: proxmox
+  - hosts: proxmox:tinyprox
     tasks:
       # Passes through primary user to be able to log in to web interface.
       # Needs a user created (probably david) and passwordless sudo.
@@ -23,6 +30,15 @@
           src: proxmox/user.cfg.j2  # relative to main playbook dir
           dest: /etc/pve/user.cfg
       
+      # Disable clustering services
+      - name: Disable clustering services
+        command: "systemctl disable --now {{ item }}"
+        loop:
+          - pve-ha-crm.service
+          - pve-ha-lrm.service
+          - corosync.service
+          #- pvesr.timer # possibly not applicable in Proxmox 7.x+?
+
       # Copies shell script which eases cloud-init template creation    
       - name: Copy cloud-init template deployment script
         template:
@@ -64,10 +80,10 @@
       - role: simoncaron.pve_addons
       - role: geerlingguy.ntp
  
-  ################
-  ###  chunky  ###
-  ################
-  - hosts: chunky
+  ###############
+  ###  servo  ###
+  ###############
+  - hosts: servo
     become: yes
     vars_files:
       - 'vars/vault.yaml'
@@ -124,7 +140,7 @@
     roles:
       - role: buluma.mount
       - role: geerlingguy.docker
-      - role: geerlingguy.nfs
+      #- role: geerlingguy.nfs
       - role: vladgh.samba.server
 
     tasks:
@@ -153,13 +169,30 @@
     roles:
       - role: geerlingguy.docker
 
-  ##############
-  ###  yoshi  ##
-  ##############
-  - hosts: yoshi
+  ######################
+  ###  docker-media  ###
+  ######################
+  - hosts: docker-media
     become: yes
+    vars_files:
+      - 'vars/vault.yaml'
+
     roles:
-      - role: vladgh.samba.server
+      - role: buluma.mount
+      - role: geerlingguy.docker
+  
+  ###################
+  ###  pihole(s)  ###
+  ###################
+  - hosts: pihole
+    become: yes
+    vars_files:
+      - 'vars/vault.yaml'
+    tasks:
+      - name: "Install Pihole"
+        ansible.builtin.command: "curl -sSL https://install.pi-hole.net | bash"
+
+      #- name: 
   
   #################
   ###  sandbox  ###

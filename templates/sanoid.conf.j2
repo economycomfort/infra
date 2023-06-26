@@ -2,16 +2,16 @@
 {{ ansible_managed | comment }}
 ############################################################
 
-[tank/appdata]
+[fast/appdata]
 use_template = production
 
-[tank/backups]
-use_template = backup
-
-[tank/home]
+[fast/home]
 use_template = production
 recursive = yes
 process_children_only = yes
+
+[tank/backups]
+use_template = backup
 
 [tank/media]
 use_template = media

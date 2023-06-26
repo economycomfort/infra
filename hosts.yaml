@@ -11,28 +11,25 @@ all:
     proxmox:
       ansible_host: 192.168.20.10
 
-    # PVE
-    #pve:
-    #  ansible_host: 192.168.20.15
+    # tinyprox
+    tinyprox:
+      ansible_host: 192.168.20.11
 
+    # docker-media
+    docker-media:
+      ansible_host: 192.168.20.210
+    
     # GCP      
     sandbox:
       ansible_host: sandbox.brooks.haus
 
-    # Yoshi
-    yoshi:
-      ansible_host: 192.168.69.105
-
-    # lxc-test
-    lxc-test:
-      ansible_host: 192.168.69.108
   
   children: # groups of hosts
     
     # prod hosts
     srv:
       hosts:
-        chunky:
+        servo:
           ansible_host: 192.168.20.200
         homebot:
           ansible_host: 192.168.20.201

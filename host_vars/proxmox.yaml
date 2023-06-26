@@ -9,10 +9,8 @@ ansible_python_interpreter: /usr/bin/python3
 ###  grog.package  ###
 ###################### 
 package_list:
-  - name: bpytop
   - name: curl
   - name: fio
-  - name: ncdu
   - name: git
   - name: htop
   - name: iftop
@@ -23,6 +21,7 @@ package_list:
   - name: toilet
   - name: tree
   - name: tmux
+  - name: vim
   - name: wget
   - name: zsh
 

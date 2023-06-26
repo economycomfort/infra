@@ -13,28 +13,28 @@ ansible_python_interpreter: /usr/bin/python3
 zpools:
   - name: tank
     mountpoint: /mnt/tank
+  - name: fast
+    mountpoint: /mnt/fast
 
 zdatasets:
-  - name: tank/appdata
-    mountpoint: /mnt/tank/appdata
-  - name: tank/home
-    mountpoint: /mnt/tank/home
+  - name: fast/appdata
+    mountpoint: /mnt/fast/appdata
+  - name: fast/home
+    mountpoint: /mnt/fast/home
   - name: tank/backups
     mountpoint: /mnt/tank/backups
   - name: tank/media
     mountpoint: /mnt/tank/media
-  - name: tank/test
-    mountpoint: /mnt/tank/test
 
-zhome: /mnt/tank/home    # dataset for /home
+zhome: /mnt/fast/home    # dataset for /home
 
 ######################
 ###  buluma.mount  ###
 ######################
 # We're only creating bind mounts on this host, not mounting remote filesystems.
 mount_requests:
-  - path: /srv/nfs/vm-backups
-    src: /mnt/tank/backups/vm
+  - path: /srv/nfs/proxmox
+    src: /mnt/tank/backups/proxmox
     opts: "bind,defaults,nofail,x-systemd.requires=zfs-mount.service"
     fstype: none
   - path: /srv/nfs/media
@@ -42,7 +42,7 @@ mount_requests:
     opts: "bind,defaults,nofail,x-systemd.requires=zfs-mount.service"
     fstype: none
   - path: /srv/nfs/appdata
-    src: /mnt/tank/appdata
+    src: /mnt/fast/appdata
     opts: "bind,defaults,nofail,x-systemd.requires=zfs-mount.service"
     fstype: none
 
@@ -56,6 +56,11 @@ docker_compose_package: docker-compose-plugin
 docker_compose_package_state: latest
 docker_users: 
   - david
+## Docker uses zfs by default if /var/lib/docker is zfs,
+## no need for the below.
+#docker_daemon_options:
+#  storage-driver: "zfs"
+#  data-root: "/mnt/fast/docker"
 
 #########################
 ###  geerlingguy.nfs  ###
@@ -63,7 +68,7 @@ docker_users:
 nfs_exports:
   - "/srv/nfs/appdata       10.255.255.0/24(rw,sync,no_subtree_check)"
   - "/srv/nfs/media         10.255.255.0/24(rw,sync,no_subtree_check)"
-  - "/srv/nfs/vm-backups    10.255.255.10/32(rw,sync,no_subtree_check,no_root_squash)"
+  - "/srv/nfs/proxmox       10.255.255.10/32(rw,sync,no_subtree_check,no_root_squash)"
 
 ######################
 ###  grog.package  ###

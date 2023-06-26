@@ -1,8 +1,5 @@
-chunky:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit chunky
-
-yoshi:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit yoshi
+servo:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit servo
 
 sandbox:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit sandbox
@@ -10,8 +7,11 @@ sandbox:
 proxmox:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit proxmox
 
-pve:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit pve
+tinyprox:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit tinyprox
+
+docker-media:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit docker-media
 
 deploy:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password
@@ -20,7 +20,7 @@ update:
 	ansible-playbook update.yaml
 
 test:
-	ansible-playbook test.yaml
+	ansible-playbook test.yaml -vvvv
 
 encrypt:
 	ansible-vault encrypt --vault-password-file .vault-password vars/vault.yaml

@@ -1,7 +1,7 @@
 ---
 ## Random plays for testing.
 
-  - hosts: pve
+  - hosts: servo
     #vars_files:
     #  - 'vars/vault.yaml'
     become: yes
@@ -12,4 +12,4 @@
     #    msg: "{{ dotfiles_dest }}"
 
     roles:
-      - geerlingguy.ntp
+      - geerlingguy.docker

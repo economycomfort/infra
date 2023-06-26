@@ -3,14 +3,6 @@
 
   - hosts: all
     become: yes
-
-  - hosts: proxmox
-    tasks:
-    roles:
-      - role: simoncaron.pve_addons
-
-  - hosts: srv:pihole:proxmox
-    become: yes
     tasks:
       - name: import keys from github
         ansible.posix.authorized_key:
@@ -22,12 +14,18 @@
         ansible.builtin.package:
           name: '*'
           state: latest
-          
+
+  - hosts: srv:pihole:proxmox:tinyprox
+    become: yes      
     roles:
       - role: dab-motd
+
+  - hosts: proxmox
+    tasks:
+    roles:
+      - role: simoncaron.pve_addons
 
   - hosts: pihole
     tasks:
     - name: update pihole
       command: 'pihole -up'
-

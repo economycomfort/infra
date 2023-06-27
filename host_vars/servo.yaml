@@ -19,6 +19,8 @@ zpools:
 zdatasets:
   - name: fast/appdata
     mountpoint: /mnt/fast/appdata
+  - name: fast/docker
+    mountpoint: /var/lib/docker
   - name: fast/home
     mountpoint: /mnt/fast/home
   - name: tank/fast-backups
@@ -83,6 +85,7 @@ package_list:
   - name: fio
   - name: git
   - name: git-crypt
+  - name: gnupg
   - name: iftop
   - name: iotop
   - name: mc

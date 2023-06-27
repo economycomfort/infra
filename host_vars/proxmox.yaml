@@ -16,6 +16,7 @@ package_list:
   - name: iftop
   - name: iotop
   - name: libguestfs-tools
+  - name: lm-sensors
   - name: net-tools
   - name: ssh-import-id
   - name: toilet

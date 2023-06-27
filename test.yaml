@@ -16,15 +16,22 @@
 
       - name: Copy sanoid configuration template
         template:
-          src: sanoid.conf.j2
+          src: servo/sanoid/sanoid.conf.j2
           dest: /etc/sanoid/sanoid.conf
           owner: root
           group: root
           mode: 0644
 
-      - name: Configure syncoid backups
+      - name: Install syncoid cron
         template:
-          src: servo/
+          src: servo/sanoid/syncoid-cron.j2
+          dest: /etc/cron.d/syncoid
+          owner: root
+          group: root
+          mode: 0644
+
+      - name: Restart cron
+        command: service cron restart
 
     #roles:
     #  - geerlingguy.docker

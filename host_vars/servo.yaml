@@ -81,6 +81,8 @@ package_list:
   - name: avahi-daemon
   - name: btop
   - name: fio
+  - name: git
+  - name: git-crypt
   - name: iftop
   - name: iotop
   - name: mc

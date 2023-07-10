@@ -14,7 +14,7 @@
 #
 # Common cloud image URLs:
 # Ubuntu: https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img
-# Debian: https://cloud.debian.org/images/cloud/bullseye/latest/debian-11-generic-amd64.qcow2
+# Debian: https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
 # Arch: https://geo.mirror.pkgbuild.com/imgs/latest/Arch-Linux-x86_64-cloudimg.qcow2
 #
 set -e
@@ -86,6 +86,7 @@ qm create ${id} --name ${name} \
   --net0 virtio,bridge=vmbr0,tag=69 \
   --net1 virtio,bridge=vmbr1
 qm importdisk ${id} ./${img} local-lvm
+qm set ${id} --machine q35
 #qm set ${id} --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-${id}-disk-0
 qm set ${id} --scsihw virtio-scsi-single --scsi0 local-lvm:vm-${id}-disk-0,aio=native,discard=on,iothread=1,ssd=1
 qm set ${id} --boot c --bootdisk scsi0

@@ -1,5 +1,8 @@
 {{ ansible_managed | comment }}
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+SRC="fast"
+DST="tank/fast-snapshots"
+EXCLUDES=("fast/docker/*")
 
-45 3 * * * root syncoid fast tank/fast-snapshots --recursive --no-sync-snap --sendoptions="-w" --exclude="fast/docker*" --quiet
+45 3 * * * root syncoid -r --no-sync-snap --create-bookmark --sendoptions="-w" --exclude="$EXCLUDES[*]" --quiet $SRC $DST

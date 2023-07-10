@@ -14,10 +14,6 @@ all:
     # tinyprox
     tinyprox:
       ansible_host: 192.168.20.11
-
-    # docker-media
-    docker-media:
-      ansible_host: 192.168.20.210
     
     # GCP      
     sandbox:
@@ -43,9 +39,9 @@ all:
           ansible_host: 192.168.69.11
 
     # vectra hosts
-    vectra:
-      hosts:
-        kali-se:
-          ansible_host: 10.254.20.120
-        kali-partner:
-          ansible_host: 10.250.20.118
+    #vectra:
+    #  hosts:
+    #    kali-se:
+    #      ansible_host: 10.254.20.120
+    #    kali-partner:
+    #      ansible_host: 10.250.20.118

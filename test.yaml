@@ -1,37 +1,30 @@
 ---
 ## Random plays for testing.
 
-  - hosts: servo
+  - hosts: proxmox
     #vars_files:
     #  - 'vars/vault.yaml'
     become: yes
 
     tasks:
-      # Sanoid configuration for automated ZFS snapshots
-      - name: Create /etc/sanoid directory
-        file:
-          path: /etc/sanoid
-          state: directory
-          mode: 0755
+    # Copies proxmox config backup script
+    #- name: Copy proxmox configuration backup script
+    #  template:
+    #    src: pvehost-backup.j2
+    #    dest: /tmp/pvehost-backup
+    #    mode: 0755
 
-      - name: Copy sanoid configuration template
-        template:
-          src: servo/sanoid/sanoid.conf.j2
-          dest: /etc/sanoid/sanoid.conf
-          owner: root
-          group: root
-          mode: 0644
+    #  - name: Install syncoid cron
+    #    template:
+    #      src: servo/sanoid/syncoid-cron.j2
+    #      dest: /etc/cron.d/syncoid
+    #      owner: root
+    #      group: root
+    #      mode: 0644
 
-      - name: Install syncoid cron
-        template:
-          src: servo/sanoid/syncoid-cron.j2
-          dest: /etc/cron.d/syncoid
-          owner: root
-          group: root
-          mode: 0644
+    # - name: Restart cron
+    #    command: service cron restart
 
-      - name: Restart cron
-        command: service cron restart
-
-    #roles:
-    #  - geerlingguy.docker
+    roles:
+      - dab-proxmox
+      

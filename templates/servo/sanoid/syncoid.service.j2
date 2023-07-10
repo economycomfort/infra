@@ -1,0 +1,22 @@
+{{ ansible_managed | comment }}
+# This service launches syncoid for ZFS snapshot replication.
+#
+[Unit]
+Description=Syncoid ZFS Snapshot Replication
+
+[Service]
+Type=oneshot
+ExecStart=syncoid {{ syncoid_src_dataset }} {{ syncoid_dst_dataset }} \
+    -r --quiet --no-sync-snap --create-bookmark --sendoptions="-w" \
+{% for e in syncoid_exclude_patterns %}
+  {% if not loop.last %}
+    --exclude="{{ e }}" \
+  {% else %}
+    --exclude="{{ e }}"
+  {% endif %}
+{% endfor %}
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

@@ -5,6 +5,15 @@ ansible_python_interpreter: /usr/bin/python3
 
 ## This is a hypervisor, keep it as 'clean' as possible
 
+###################
+##  dab-proxmox  ##
+###################
+proxmox_email: d+proxmox@vhf.sh
+proxmox_timezone: US/Eastern
+proxmox_backup_dirs:  # where pve /etc backups go
+  - "/mnt/pve/ext-ssd/pve-config"
+  - "/mnt/pve/servo-nfs/pve-config"
+
 ######################
 ###  grog.package  ###
 ###################### 

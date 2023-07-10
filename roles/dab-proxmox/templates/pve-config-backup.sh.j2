@@ -1,0 +1,41 @@
+#!/bin/bash
+{{ ansible_managed | comment }}
+# Script to quickly back up relevant Proxmox configuration files to specified
+# destinations.
+#
+# See: roles/dab-proxmox/defaults/main.yaml
+#
+# To be called by a systemd service timer or cronjob.
+#
+set -e
+{# Template looks a little messy but produces a nicely formatted bash script. #}
+
+BACKUP_FILE_PREFIX="{{ proxmox_backup_file_prefix }}"   # file prefix
+RETAIN_DAYS="{{ proxmox_backup_retention_days }}"               # days of backups to retain
+BACKUP_DEST_PATHS=(            # where backups are copied to
+{% for i in proxmox_backup_dests %}
+{% if not loop.last %}
+  "{{ i }}"
+{% else %}
+  "{{ i }}"
+{% endif %}
+{% endfor %}
+)
+BACKUP_SOURCE_LIST=(           # files/folders to be backed up
+{% for i in proxmox_backup_list %}
+{% if not loop.last %}
+  "{{ i }}"
+{% else %}
+  "{{ i }}"
+{% endif %}
+{% endfor %}
+)
+
+tmp_file="/tmp/${BACKUP_FILE_PREFIX}-$(date +%Y%m%d-%H%M%S).tar.gz"
+
+tar -czf ${tmp_file} ${BACKUP_SOURCE_LIST[@]}
+for i in ${BACKUP_DEST_PATHS[@]}; do
+  cp ${tmp_file} $i
+  find ${i}/${BACKUP_FILE_PREFIX}-* -mindepth 0 -maxdepth 0 -depth -mtime +${RETAIN_DAYS} -delete
+done
+rm ${tmp_file}

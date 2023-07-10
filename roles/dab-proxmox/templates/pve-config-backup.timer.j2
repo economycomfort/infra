@@ -1,0 +1,11 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Syncoid Periodic Timer
+
+[Timer]
+OnCalendar=*-*-* 4:20:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

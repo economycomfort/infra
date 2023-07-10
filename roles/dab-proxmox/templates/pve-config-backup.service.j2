@@ -1,0 +1,14 @@
+{{ ansible_managed | comment }}
+# This service backs up a PVE host's /etc directory.
+#
+[Unit]
+Description=Proxmox Configuration (/etc) Backup
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash {{ proxmox_scripts_dir }}/pve-config-backup.sh
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

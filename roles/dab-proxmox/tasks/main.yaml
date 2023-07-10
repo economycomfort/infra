@@ -1,127 +1,114 @@
 ---
-## Handles customization of a proxmox host.
+## Customizes a Proxmox host.
+
+  - ansible.builtin.assert:
+      that:
+        - ansible_os_family == Debian
+      
+
 
   # Passes through primary user to be able to log in to web interface.
   # Needs a user created (probably {{ ansible_user }}) and passwordless sudo.
   - name: Add proxmox web interface users
-    template:
+    ansible.builtin.template:
      src: user.cfg.j2  # in role templates dir
      dest: /etc/pve/user.cfg
      backup: yes
 
-  # Disable clustering services
+  # Disable clustering services if standalone node
   - name: Disable clustering services
-    command: "systemctl disable --now {{ item }}"
+    ansible.builtin.systemd:
+      name: "{{ item }}"
+      state: disabled
     loop:
       - pve-ha-crm.service
       - pve-ha-lrm.service
       - corosync.service
       #- pvesr.timer # possibly not applicable in Proxmox 7.x+?
-    when: proxmox_clustering == 'no'
+    when: proxmox_clustering == "no"
 
-  # Set timezone to {{ proxmox_timezone }}
+  # Set timezone
   - name: Set timezone
     community.general.timezone:
       name: "{{ proxmox_timezone }}"
 
   # Creates directory for Proxmox-specific scripts
   - name: Create script directory
-    file:
+    ansible.builtin.file:
       path: "{{ proxmox_scripts_dir }}"
       state: directory
       mode: 0755
 
   # Copies shell script which eases cloud-init template creation    
   - name: Copy cloud-init template deployment script
-    template:
+    ansible.builtin.template:
       src: deploy-cloud-init-template.sh.j2
       dest: "{{ proxmox_scripts_dir }}/deploy-cloud-init-template.sh"
       mode: 0744
 
   # Copies PVE configuration backup script
   - name: Copy PVE host config backup script
-    template:
+    ansible.builtin.template:
       src: pve-config-backup.sh.j2
       dest: "{{ proxmox_scripts_dir }}/pve-config-backup.sh"
       mode: 0744
 
   # Installs PVE configuration backup service template
   - name: Install pve-config-backup systemd service
-    template:
+    ansible.builtin.template:
       src: pve-config-backup.service.j2
       dest: /etc/systemd/system/pve-config-backup.service
       owner: root
       group: root
       mode: 0755
       lstrip_blocks: yes
+    notify: Enable systemd service
 
   # Installs PVE configuration backup service timer template
   - name: Install pve-config-backup systemd timer
-    template:
+    ansible.builtin.template:
       src: pve-config-backup.timer.j2
       dest: /etc/systemd/system/pve-config-backup.timer
       owner: root
       group: root
       mode: 0755
       lstrip_blocks: yes
-
-  # Enables PVE configuration backup systemd service
-  - name: Enable pve-config-backup systemd service
-    systemd:
-      name: pve-config-backup
-      enabled: yes
-      state: started
-      masked: no
-
-  # Enables PVE configuration backup systemd timer
-  - name: Enable pve-config-backup systemd timer
-    systemd:
-      name: pve-config-backup.timer
-      enabled: yes
-      state: started
+    notify: Enable systemd timer
 
   # Add required IOMMU kernel modules
   - name: Add required IOMMU kernel modules
-    template:
+    ansible.builtin.template:
       src: iommu.conf.j2
       dest: /etc/modules-load.d/iommu.conf
+      backup: yes
       mode: 0644
 
   # Determine if host is booted UEFI or legacy MBR
   - name: Determine UEFI or MBR
-    stat:
+    ansible.builtin.stat:
       path: /sys/firmware/efi
     register: p  # if p.stat.isdir is defined, then UEFI
   
   # Modify GRUB config (if booted via MBR)
   - name: Enable IOMMU in GRUB config
-    lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/default/grub
-      regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
+      regexp: "^GRUB_CMDLINE_LINUX_DEFAULT="
       line: GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt"
       backup: yes
     when: p.stat.isdir is not defined
-
-  # Update GRUB (if booted via MBR)
-  - name: Update GRUB
-    command: update-grub
-    when: p.stat.isdir is not defined
+    notify:
+    - Update GRUB
+    - Reboot warning
 
   # Modify UEFI boot image command line - assumes ZFS (if booted UEFI)
   - name: Enable IOMMU in UEFI cmdline
-    lineinfile:
+    ansible.builtin.lineinfile:
       path: /etc/kernel/cmdline
-      regexp: '^root=ZFS' # maybe not the best check if running EFI+LVM, but why
+      regexp: "^root=ZFS" # maybe not the best check if running EFI+LVM, but why
       line: root=ZFS=rpool/ROOT/pve-1 boot=zfs intel_iommu=on iommu=pt
       backup: yes
     when: p.stat.isdir is defined and p.stat.isdir
-
-  # Update UEFI boot image (if booted UEFI)
-  - name: Update UEFI image
-    command: pve-efiboot-tool refresh
-    when: p.stat.isdir is defined and p.stat.isdir
-
-  # Warn about reboot required
-  - name: REBOOT REQUIRED
-    debug:
-      msg: "NOTICE: REBOOT REQUIRED TO ENABLE HARDWARE PASSTHROUGH"
+    notify:
+    - Update UEFI
+    - Reboot warning

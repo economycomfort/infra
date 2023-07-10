@@ -11,7 +11,7 @@
           key: https://github.com/economycomfort.keys
 
       - name: update packages
-        package:
+        ansible.builtin.package:
           name: '*'
           state: latest
 

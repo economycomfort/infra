@@ -1,12 +1,15 @@
+---
 proxmox_become: no
 proxmox_clustering: no  # Disabling can be useful for single node
 proxmox_scripts_dir: /root/scripts  # where proxmox scripts go
-proxmox_timezone: "UTC"
-proxmox_backup_file_prefix: "pve-etc"  # filename prefix of backup files
+proxmox_timezone: UTC
+proxmox_backup_file_prefix: pve-etc  # filename prefix of backup files
 proxmox_backup_retention_days: 90  # number of daily backups to retain
+proxmox_backup_systemd_service: pve-config-backup
+proxmox_backup_systemd_timer: pve-config-backup.timer
 proxmox_backup_dests:  # where pve /etc backups go
-  - "/mnt/pve/ext-ssd/pve-etc"
-  - "/mnt/pve/servo-nfs/pve-etc"
+  - /mnt/pve/ext-ssd/pve-etc
+  - /mnt/pve/servo-nfs/pve-etc
 proxmox_backup_list:  # Files/directories to include in backup.
   - /etc/aliases 
   - /etc/cron* 

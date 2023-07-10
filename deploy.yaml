@@ -52,12 +52,12 @@
         loop: "{{ zdatasets }}"
         register: dab_datasets
 
-      - set_fact:
+      - ansible.builtin.set_fact:
           mount_status: "{{ dab_datasets.results | map(attribute='ansible_facts') | flatten | map(attribute='ansible_zfs_datasets') | flatten | map(attribute='mounted') }}"
           mount_name: "{{ zdatasets | map(attribute='name') }}"
 
       - name: Fail if a ZFS dataset is not mounted.
-        fail:
+        ansible.builtin.fail:
           msg: "{{ mount_name[ansible_loop.index0] }} is not mounted!"
         loop: "{{ mount_name }}"
         loop_control: 
@@ -67,19 +67,19 @@
       # On the storage host, we're using an alternate path for /home.
       # The following tasks create a symlink for continuity.
       - name: Checking for existence of zhome directory
-        stat:
+        ansible.builtin.stat:
           path: "{{ zhome }}"
         register: zfshome
       
       - name: Discovering facts about /home
-        stat:
+        ansible.builtin.stat:
           path: /home
         register: oldhome
       
       # These commands must be combined; if not, our users $HOME will
       # be absent and subsequent SSH connections in the playbook will fail.
       - name: Symlink /home to zhome
-        shell: 
+        ansible.builtin.shell: 
           cmd: "mv /home /home.orig && ln -sf {{ zhome }} /home"
         when: 
           - zfshome.stat.exists == True
@@ -94,13 +94,13 @@
     tasks:
       # Sanoid configuration for automated ZFS snapshots
       - name: Create /etc/sanoid directory
-        file:
+        ansible.builtin.file:
           path: /etc/sanoid
           state: directory
           mode: 0755
 
       - name: Copy sanoid configuration template
-        template:
+        ansible.builtin.template:
           src: servo/sanoid/sanoid.conf.j2
           dest: /etc/sanoid/sanoid.conf
           owner: root
@@ -108,7 +108,7 @@
           mode: 0644
 
       #- name: Install syncoid cron
-      #  template:
+      #  ansible.builtin.template:
       #    src: servo/sanoid/syncoid-cron.j2
       #    dest: /etc/cron.d/syncoid
       #    owner: root
@@ -119,7 +119,7 @@
       #  command: service cron restart
 
       - name: Install syncoid systemd service
-        template:
+        ansible.builtin.template:
           src: servo/sanoid/syncoid.service.j2
           dest: /etc/systemd/system/syncoid.service
           owner: root
@@ -128,7 +128,7 @@
           lstrip_blocks: yes
 
       - name: Install syncoid systemd timer
-        template:
+        ansible.builtin.template:
           src: servo/sanoid/syncoid.timer.j2
           dest: /etc/systemd/system/syncoid.timer
           owner: root
@@ -137,14 +137,14 @@
           lstrip_blocks: yes
 
       - name: Enable syncoid systemd service
-        systemd:
+        ansible.builtin.systemd:
           name: syncoid
           enabled: yes
           state: started
           masked: no
 
       - name: Enable syncoid systemd timer
-        systemd:
+        ansible.builtin.systemd:
           name: syncoid.timer
           enabled: yes
           state: started
@@ -184,5 +184,5 @@
     become: yes
     tasks:
       - name: Ensure correct hostname
-        hostname:
+        ansible.builtin.hostname:
           name: "{{ inventory_hostname }}"

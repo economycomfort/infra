@@ -1,0 +1,30 @@
+---
+## Handles individual event-triggered tasks.
+
+  # Enable systemd service
+  - name: Enable systemd service
+    ansible.builtin.systemd:
+      name: "{{ proxmox_backup_systemd_service }}"
+      enabled: yes
+      state: started
+      masked: no
+
+  # Enable systemd timer
+  - name: Enable systemd timer
+    ansible.builtin.systemd:
+      name: "{{ proxmox_backup_systemd_timer }}"
+      enabled: yes
+      state: started
+
+  # Update GRUB configuration
+  - name: Update GRUB
+    ansible.builtin.command: update-grub
+
+  # Update UEFI configuration
+  - name: Update UEFI
+    ansible.builtin.command: pve-efiboot-tool refresh
+
+  # Warn about reboot required
+  - name: Reboot warning
+    ansible.builtin.debug:
+      msg: "NOTICE: REBOOT MAY REQUIRED TO ENABLE HARDWARE PASSTHROUGH"

@@ -7,23 +7,6 @@
     become: yes
 
     tasks:
-    # Copies proxmox config backup script
-    #- name: Copy proxmox configuration backup script
-    #  template:
-    #    src: pvehost-backup.j2
-    #    dest: /tmp/pvehost-backup
-    #    mode: 0755
-
-    #  - name: Install syncoid cron
-    #    template:
-    #      src: servo/sanoid/syncoid-cron.j2
-    #      dest: /etc/cron.d/syncoid
-    #      owner: root
-    #      group: root
-    #      mode: 0644
-
-    # - name: Restart cron
-    #    command: service cron restart
 
     roles:
       - dab-proxmox

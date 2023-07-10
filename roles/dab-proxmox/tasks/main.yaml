@@ -1,11 +1,18 @@
 ---
 ## Customizes a Proxmox host.
 
+  # Run a few sanity checks to validate this playbook is run against something
+  # that looks like a Proxmox host.  If not, fail.
+  - ansible.builtin.stat:
+       path: /etc/pve
+    register: p
+    
   - ansible.builtin.assert:
-      that:
-        - ansible_os_family == Debian
-      
-
+      that: 
+        - ansible_distribution == 'Debian'  # Host should be running Debian.
+        - p.stat.isdir is defined and p.stat.isdir  # /etc/pve should exist.
+      fail_msg: This host does not look like Proxmox.
+      quiet: yes
 
   # Passes through primary user to be able to log in to web interface.
   # Needs a user created (probably {{ ansible_user }}) and passwordless sudo.
@@ -25,7 +32,7 @@
       - pve-ha-lrm.service
       - corosync.service
       #- pvesr.timer # possibly not applicable in Proxmox 7.x+?
-    when: proxmox_clustering == "no"
+    when: proxmox_clustering == "no"  # default
 
   # Set timezone
   - name: Set timezone

@@ -28,4 +28,4 @@
   - hosts: pihole
     tasks:
     - name: update pihole
-      command: 'pihole -up'
+      ansible.builtin.command: 'pihole -up'

@@ -3,7 +3,7 @@ target_os: debian
 ansible_user: root  # key only
 ansible_python_interpreter: /usr/bin/python3
 
-## This is a hypervisor, keep it as 'clean' as possible
+## This is a hypervisor, keep it as 'clean' as possible.
 
 ######################
 ###  grog.package  ###
@@ -30,7 +30,7 @@ package_list:
 ###  geerlingguy.ntp  ###
 #########################
 ntp_enabled: yes
-ntp_timezone: America/New_York
+ntp_timezone: "{{ common_timezone }}"
 ntp_package: chrony     # ntp or chrony
 ntp_daemon: chrony
 ntp_config_file: /etc/chrony/chrony.conf

@@ -1,2 +1,3 @@
 ---
 ### Common vars across all hosts
+common_timezone: US/Eastern

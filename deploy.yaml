@@ -5,6 +5,7 @@
     become: yes
     vars_files:
       - 'vars/vault.yaml'
+      - 'vars/common.yaml'
     
     pre_tasks:     
       - name: import keys from github
@@ -33,8 +34,6 @@
   ###############
   - hosts: servo
     become: yes
-    vars_files:
-      - 'vars/vault.yaml'
     
     pre_tasks:
       # Checks to see if defined ZFS pools are mounted. Playbook fails if not.
@@ -154,8 +153,6 @@
   #################
   - hosts: homebot
     become: yes
-    vars_files:
-      - 'vars/vault.yaml'
     roles:
       - role: geerlingguy.docker
   
@@ -164,8 +161,6 @@
   ###################
   - hosts: pihole
     become: yes
-    vars_files:
-      - 'vars/vault.yaml'
     tasks:
       - name: "Install Pihole"
         command: "curl -sSL https://install.pi-hole.net | bash"

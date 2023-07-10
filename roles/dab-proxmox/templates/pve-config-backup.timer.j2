@@ -1,11 +1,11 @@
 {{ ansible_managed | comment }}
 
 [Unit]
-Description=Syncoid Periodic Timer
+Description=Proxmox Config Backup Periodic Timer
 
 [Timer]
 OnCalendar=*-*-* 4:20:00
-Persistent=true
+#Persistent=true
 
 [Install]
 WantedBy=timers.target

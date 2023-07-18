@@ -3,23 +3,6 @@ target_os: debian
 ansible_user: david
 ansible_python_interpreter: /usr/bin/python3
 
-######################
-###  grog.package  ###
-###################### 
-package_list:
-  - name: curl
-  - name: git
-  - name: htop
-  - name: net-tools
-  - name: python3
-  - name: qemu-guest-agent  # Proxmox/QEMU
-  - name: ssh-import-id
-  - name: tmux
-  - name: toilet
-  - name: tree
-  - name: wget
-  - name: zsh
-
 ############################
 ###  geerlingguy.docker  ###
 ############################
@@ -32,13 +15,22 @@ docker_users:
   - david
 
 ######################
-###  dab-gitrepos  ###
-######################
-gitrepos:
-  - name: docker
-    url: https://github.com/economycomfort/docker.git
-    path: /home/david/repos/docker
-    #uid: 1000
-    #gid: 1000
-    #overwrite: no
-    #become: no
+###  grog.package  ###
+###################### 
+package_list:
+  - name: avahi-daemon
+  - name: curl
+  - name: git
+  - name: git-crypt
+  - name: htop
+  - name: jq
+  - name: net-tools
+  - name: python3
+  - name: qemu-guest-agent  # Proxmox/QEMU
+  - name: rsync
+  - name: ssh-import-id
+  - name: tmux
+  - name: toilet
+  - name: tree
+  - name: wget
+  - name: zsh

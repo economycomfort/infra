@@ -43,7 +43,7 @@ syncoid_exclude_patterns:
 ######################
 ###  buluma.mount  ###
 ######################
-# We're only creating bind mounts on this host, not mounting remote filesystems.
+# Only create bind mounts on this host.
 mount_requests:
   - path: /srv/nfs/proxmox
     src: /mnt/tank/proxmox
@@ -99,8 +99,9 @@ package_list:
   - name: net-tools
   - name: nfs-kernel-server
   - name: nmap
-  - name: qemu-guest-agent
   - name: python3
+  - name: qemu-guest-agent # Proxmox/QEMU
+  - name: rsync
   - name: samba
   - name: sanoid
   - name: smartmontools
@@ -108,6 +109,7 @@ package_list:
   - name: tmux
   - name: toilet
   - name: tree
+  - name: whois
   - name: zfsutils-linux
   - name: zsh
 

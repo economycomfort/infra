@@ -1,13 +1,20 @@
 ---
 ## Random plays for testing.
 
-  - hosts: proxmox
+  - hosts: servo
     vars_files:
-      - 'vars/main.yaml'
+      - 'vars/common.yaml'
     become: yes
 
     tasks:
+      - name: Copy sanoid configuration template
+        ansible.builtin.template:
+          src: servo/sanoid/sanoid.conf.j2
+          dest: /etc/sanoid/sanoid.conf
+          owner: root
+          group: root
+          mode: 0644
 
-    roles:
-      - dab-proxmox
+    #roles:
+    #  - dab-proxmox
       

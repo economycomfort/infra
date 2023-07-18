@@ -1,6 +1,9 @@
 servo:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit servo
 
+homebot:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit homebot
+
 sandbox:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit sandbox
 

@@ -3,6 +3,10 @@
 
   - hosts: all
     become: yes
+    vars_files:
+      - 'vars/vault.yaml'
+      - 'vars/common.yaml'
+
     tasks:
       - name: import keys from github
         ansible.posix.authorized_key:

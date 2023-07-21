@@ -1,19 +1,18 @@
 ---
 ## Random plays for testing.
 
-  - hosts: servo
+  - hosts: proxmox
     vars_files:
       - 'vars/common.yaml'
     become: yes
 
     tasks:
-      - name: Copy sanoid configuration template
+      # Copies shell script which eases cloud-init template creation    
+      - name: Copy cloud-init template deployment script
         ansible.builtin.template:
-          src: servo/sanoid/sanoid.conf.j2
-          dest: /etc/sanoid/sanoid.conf
-          owner: root
-          group: root
-          mode: 0644
+          src: roles/dab-proxmox/templates/deploy-cloud-init-template.sh.j2
+          dest: "/root/deploy-cloud-init-template.sh"
+          mode: 0744
 
     #roles:
     #  - dab-proxmox

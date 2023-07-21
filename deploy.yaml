@@ -158,8 +158,8 @@
       - name: Insert cronjob to sync docker service configuration to servo
         ansible.builtin.cron:
           name: Backup homebot docker services to servo
-          minute: 0
-          hour: 2
+          minute: 40
+          hour: 23
           job: "rsync -avzq --del ~/appdata/ servo:/mnt/fast/appdata/homebot/"
           user: "{{ ansible_user }}"
 

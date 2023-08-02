@@ -1,19 +1,26 @@
 ---
 ## Random plays for testing.
 
-  - hosts: proxmox
+  - hosts: opnsense
     vars_files:
       - 'vars/common.yaml'
     become: yes
 
     tasks:
-      # Copies shell script which eases cloud-init template creation    
-      - name: Copy cloud-init template deployment script
-        ansible.builtin.template:
-          src: roles/dab-proxmox/templates/deploy-cloud-init-template.sh.j2
-          dest: "/root/deploy-cloud-init-template.sh"
-          mode: 0744
+      - name: Determine if KVM VM
+        ansible.builtin.service:
+          name: nosuchservice
+          state: started
+        register: qemu_state
+        ignore_errors: yes
 
-    #roles:
-    #  - dab-proxmox
+      - name: Debug
+        ansible.builtin.debug:
+          msg: "{{ qemu_state.state }}"
+        when:
+          - qemu_state.name is defined
+
+
+    roles:
+
       

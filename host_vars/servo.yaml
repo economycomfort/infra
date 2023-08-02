@@ -21,8 +21,8 @@ zdatasets:
     mountpoint: /var/lib/docker
   - name: fast/home
     mountpoint: /mnt/fast/home
-  - name: tank/fast-backups
-    mountpoint: /mnt/tank/fast-backups
+  - name: tank/fast-snapshots
+    mountpoint: /mnt/tank/fast-snapshots
   - name: tank/timemachine
     mountpoint: /mnt/tank/timemachine
   - name: tank/proxmox
@@ -68,8 +68,7 @@ docker_compose_package: docker-compose-plugin
 docker_compose_package_state: latest
 docker_users: 
   - david
-## Docker uses zfs by default if /var/lib/docker is itself zfs,
-## no need for the below.
+## Docker uses zfs by default if /var/lib/docker is itself zfs.
 #docker_daemon_options:
 #  storage-driver: "zfs"
 #  data-root: "/mnt/fast/docker"
@@ -78,9 +77,9 @@ docker_users:
 ###  geerlingguy.nfs  ###
 #########################
 nfs_exports:
-  - "/srv/nfs/appdata       10.255.255.0/24(rw,sync,no_subtree_check)"
-  - "/srv/nfs/media         10.255.255.0/24(rw,sync,no_subtree_check)"
-  - "/srv/nfs/proxmox       10.255.255.10/32(rw,sync,no_subtree_check,no_root_squash)"
+  - "/srv/nfs/appdata/logatron  10.255.255.12/32(rw,sync,no_root_squash)"
+  - "/srv/nfs/media             10.255.255.0/24(rw,sync)"
+  - "/srv/nfs/proxmox           10.255.255.10/32(rw,sync,no_root_squash)"
 
 ######################
 ###  grog.package  ###

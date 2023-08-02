@@ -1,0 +1,44 @@
+---
+target_os: debian
+ansible_user: david
+ansible_python_interpreter: /usr/bin/python3
+
+######################
+###  buluma.mount  ###
+######################
+mount_requests:
+  - path: /mnt/logatron
+    src: 10.255.255.200:/srv/nfs/appdata/logatron
+    opts: "rw,relatime"
+    fstype: nfs
+
+############################
+###  geerlingguy.docker  ###
+############################
+docker_edition: "ce"
+docker_packages_state: latest
+docker_install_compose_plugin: yes
+docker_compose_package: docker-compose-plugin
+docker_compose_package_state: latest
+docker_users: 
+  - david
+
+######################
+###  grog.package  ###
+###################### 
+package_list:
+  - name: curl
+  - name: git
+  - name: git-crypt
+  - name: htop
+  - name: jq
+  - name: net-tools
+  - name: python3
+  - name: qemu-guest-agent  # Proxmox/QEMU
+  - name: rsync
+  - name: ssh-import-id
+  - name: tmux
+  - name: toilet
+  - name: tree
+  - name: wget
+  - name: zsh

@@ -165,6 +165,111 @@
 
     roles:
       - role: geerlingguy.docker
+
+  ##################
+  ###  logatron  ###
+  ##################
+  - hosts: logatron
+    become: yes
+    tasks:
+    roles:
+      - role: buluma.mount
+      - role: geerlingguy.docker
+
+  ##################
+  ###  opnsense  ###
+  ##################
+  - hosts: opnsense
+    become: yes
+    tasks:
+      # tasks assume {{ ansible_user }} is created w/ sudo access.
+      # System -> Access, create {{ ansible_user }}, place in Admins group.
+      # System -> Administration -> sudo, ensure "admins" group is included.
+      - name: Add telegraf to sudoers
+        ansible.builtin.lineinfile:
+          path: /usr/local/etc/sudoers
+          state: present
+          regexp: '^telegraf\s+ALL='
+          line: 'telegraf ALL=(root) NOPASSWD: /usr/local/bin/telegraf_pfifgw.php'
+          validate: '/usr/local/sbin/visudo -cf %s'
+
+      - name: Add telegraf cmd alias to sudoers
+        ansible.builtin.lineinfile:
+          path: /usr/local/etc/sudoers
+          state: present
+          regexp: '^Cmnd_Alias\s+PFIGW'
+          line: 'Cmnd_Alias PFIFGW = /usr/local/bin/telegraf_pfifgw.php'
+          validate: '/usr/local/sbin/visudo -cf %s'
+            #  - name: disable logging for pfifgw script
+
+      - name: Disable logging for PFIGW
+        ansible.builtin.lineinfile:
+          path: /usr/local/etc/sudoers
+          state: present
+          regexp: '^Defaults!PFIGW'
+          line: 'Defaults!PFIFGW !log_allowed'
+          validate: '/usr/local/sbin/visudo -cf %s'
+
+      - name: Create telegraf directory
+        ansible.builtin.file:
+          path: /usr/local/etc/telegraf.d
+          state: directory
+          owner: telegraf
+          group: telegraf
+          mode: 0750
+
+      - name: Download telegraf config
+        ansible.builin.get_url:
+          url: https://raw.githubusercontent.com/bsmithio/OPNsense-Dashboard/master/config/custom.conf
+          dest: /usr/local/etc/telegraf.d/custom.conf
+          mode: 0644
+
+      - name: Download telegraf_pfifgw.php
+        ansible.builtin.get_url:
+          url: https://raw.githubusercontent.com/Bsmith101/OPNsense-Dashboard/master/plugins/telegraf_pfifgw.php
+          dest: /usr/local/bin/telegraf_pfifgw.php
+          mode: 0755
+
+      - name: Determine if KVM VM
+        ansible.builtin.service:
+          name: nosuchservice
+          state: started
+        register: qemu_state
+        ignore_errors: yes
+      
+      - name: Download telegraf_temperature.sh
+        ansible.builtin.get_url:
+          url: https://raw.githubusercontent.com/Bsmith101/OPNsense-Dashboard/master/plugins/telegraf_temperature.sh
+          dest: /usr/local/bin/telegraf_temperature.sh
+          mode: 0755
+        when: qemu_state.name is defined
+
+      - name: Download Suricata.conf
+        ansible.builtin.get_url:
+          url: https://raw.githubusercontent.com/bsmithio/OPNsense-Dashboard/master/config/suricata/suricata.conf
+          dest: /usr/local/etc/telegraf.d/suricata.conf
+          mode: 0644
+
+      - name: Download suricata custom.yaml
+        ansible.builtin.get_url:
+          url: https://raw.githubusercontent.com/bsmithio/OPNsense-Dashboard/master/config/suricata/custom.yaml
+          dest: /usr/local/opnsense/service/templates/OPNsense/IDS/custom.yaml
+          mode: 0644
+
+      - name: create eve.json
+        ansible.builtin.file:
+          path: /tmp/eve.json
+          owner: telegraf
+          state: touch
+          group: telegraf
+          mode: 0640
+
+      - name: Restart Telegraf service
+        ansible.builtin.service:
+          name: telegraf
+          state: restarted
+
+    roles:
   
   ###################
   ###  pihole(s)  ###

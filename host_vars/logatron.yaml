@@ -37,6 +37,7 @@ package_list:
   - name: qemu-guest-agent  # Proxmox/QEMU
   - name: rsync
   - name: ssh-import-id
+  - name: syslog-ng
   - name: tmux
   - name: toilet
   - name: tree

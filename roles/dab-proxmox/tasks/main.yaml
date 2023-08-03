@@ -82,6 +82,14 @@
       lstrip_blocks: yes
     notify: Enable systemd timer
 
+  # Set tmp directory for backups to /tmp (vs. target storage)
+  - name: Set vzdump tmpdir
+    ansible.builtin.lineinfile:
+      path: /etc/vzdump.conf
+      regexp: "^#tmpdir"
+      line: "tmpdir: /tmp"
+      backup: yes
+
   # Add required IOMMU kernel modules
   - name: Add required IOMMU kernel modules
     ansible.builtin.template:

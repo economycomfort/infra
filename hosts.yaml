@@ -6,9 +6,6 @@
 #
 all:
   hosts:  # individual hosts
-
-    opnsense:
-      ansible_host: 192.168.20.1
     
     # proxmox
     proxmox:
@@ -32,8 +29,6 @@ all:
           ansible_host: 192.168.20.200
         homebot:
           ansible_host: 192.168.20.201
-        logatron:
-          ansible_host: 192.168.69.12
     
     # pihole
     pihole:

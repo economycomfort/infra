@@ -30,18 +30,10 @@ all:
         homebot:
           ansible_host: 192.168.20.201
     
-    # pihole
-    pihole:
+    # piholes
+    piholes:
       hosts:
-        pihole-a:
+        pihole-prod:
+          ansible_host: 192.168.20.15
+        pihole-lab:
           ansible_host: 192.168.69.10
-        pihole-b:
-          ansible_host: 192.168.69.11
-
-    # vectra hosts
-    #vectra:
-    #  hosts:
-    #    kali-se:
-    #      ansible_host: 10.254.20.120
-    #    kali-partner:
-    #      ansible_host: 10.250.20.118

@@ -77,7 +77,6 @@ docker_users:
 ###  geerlingguy.nfs  ###
 #########################
 nfs_exports:
-  - "/srv/nfs/appdata/logatron  10.255.255.12/32(rw,sync,no_root_squash)"
   - "/srv/nfs/media             10.255.255.0/24(rw,sync)"
   - "/srv/nfs/proxmox           10.255.255.10/32(rw,sync,no_root_squash)"
 

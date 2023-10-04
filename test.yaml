@@ -1,26 +1,11 @@
 ---
 ## Random plays for testing.
 
-  - hosts: opnsense
+  - hosts: servo
     vars_files:
       - 'vars/common.yaml'
     become: yes
 
     tasks:
-      - name: Determine if KVM VM
-        ansible.builtin.service:
-          name: nosuchservice
-          state: started
-        register: qemu_state
-        ignore_errors: yes
-
-      - name: Debug
-        ansible.builtin.debug:
-          msg: "{{ qemu_state.state }}"
-        when:
-          - qemu_state.name is defined
-
-
     roles:
-
-      
+      - role: geerlingguy.nfs

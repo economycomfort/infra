@@ -1,11 +1,21 @@
 ---
 ## Random plays for testing.
 
-  - hosts: servo
+  - hosts: proxmox
     vars_files:
       - 'vars/common.yaml'
     become: yes
 
     tasks:
-    roles:
-      - role: geerlingguy.nfs
+      # Add Backup disk to /etc/fstab
+      - name: Add backup drive to fstab
+        ansible.posix.mount:
+          path: "{{ proxmox_backup_disk_mount }}"
+          src: "LABEL={{ proxmox_backup_disk_label }}"
+          fstype: ext4
+          opts: "{{ proxmox_backup_disk_opts }}"
+          state: present
+        #when: proxmox_backup_disk_mount is defined
+    
+    #roles:
+    #  - role: geerlingguy.nfs

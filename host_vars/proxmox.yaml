@@ -13,6 +13,10 @@ proxmox_timezone: "{{ common_timezone }}"
 proxmox_backup_dirs:  # where pve /etc backups go
   - "/mnt/pve/ext-ssd/pve-config"
   - "/mnt/pve/servo-nfs/pve-config"
+proxmox_backup_disk_mount: /mnt/pve/ext-ssd  # Where does backup disk mount?
+proxmox_backup_disk_label: INTEL_S3610_400G # Disklabel of backup disk (see /dev/disk/by-label)
+proxmox_backup_disk_fstype: ext4  # Backup disk fstype
+proxmox_backup_disk_opts: auto,nofail,noatime,rw
 
 ######################
 ###  grog.package  ###

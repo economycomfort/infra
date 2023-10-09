@@ -16,6 +16,11 @@
       enabled: yes
       state: started
 
+  # Reload systemctl
+  - name: Reload systemctl
+    ansible.builtin.systemd:
+      daemon_reload: yes
+
   # Update GRUB configuration
   - name: Update GRUB
     ansible.builtin.command: update-grub

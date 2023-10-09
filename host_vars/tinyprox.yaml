@@ -5,10 +5,19 @@ ansible_python_interpreter: /usr/bin/python3
 
 ## This is a hypervisor, keep it as 'clean' as possible.
 
+###################
+##  dab-proxmox  ##
+###################
+proxmox_email: d+proxmox@vhf.sh
+proxmox_timezone: US/Eastern
+proxmox_backup_dirs:  # where pve /etc backups go
+  - "/mnt/pve/ext-ssd/pve-config"
+  - "/mnt/pve/servo-nfs/pve-config"
+
 ######################
 ###  grog.package  ###
 ###################### 
-ackage_list:
+package_list:
   - name: curl
   - name: fio
   - name: git
@@ -30,7 +39,7 @@ ackage_list:
 ###  geerlingguy.ntp  ###
 #########################
 ntp_enabled: yes
-ntp_timezone: "{{ common_timezone }}"
+ntp_timezone: US/Eastern
 ntp_package: chrony     # ntp or chrony
 ntp_daemon: chrony
 ntp_config_file: /etc/chrony/chrony.conf
@@ -44,6 +53,6 @@ ntp_servers:
 ###############################
 pve_addons_enable_dark_theme: no
 pve_addons_remove_subscription_nag: yes
-pve_addons_disable_enterprise_repo: no
+pve_addons_disable_enterprise_repo: yes
 pve_addons_remove_enterprise_repo: yes
 pve_addons_add_no_subscription_repo: yes

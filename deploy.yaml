@@ -169,25 +169,15 @@
   ###################
   ###  pihole(s)  ###
   ###################
-  - hosts: pihole
+  - hosts: piholes
     become: yes
     tasks:
       - name: "Install Pihole"
         ansible.builtin.command: "curl -sSL https://install.pi-hole.net | bash"
   
   #################
-  ###  sandbox  ###
+  ###  redteam  ###
   #################
-  - hosts: sandbox
+  - hosts: redteam
     become: yes
     roles:
-
-  ######################
-  ###  Vectra Hosts  ###
-  ######################
-  - hosts: vectra
-    become: yes
-    tasks:
-      - name: Ensure correct hostname
-        ansible.builtin.hostname:
-          name: "{{ inventory_hostname }}"

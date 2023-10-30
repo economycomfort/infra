@@ -4,11 +4,8 @@ servo:
 homebot:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit homebot
 
-logatron:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit logatron
-
-sandbox:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit sandbox
+redteam:
+	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit redteam
 
 proxmox:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit proxmox

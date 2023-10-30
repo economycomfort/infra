@@ -14,6 +14,10 @@ all:
     # tinyprox
     tinyprox:
       ansible_host: 192.168.20.11
+ 
+    # tinyprox
+    redteam:
+      ansible_host: 192.168.69.20
     
     # GCP      
     #sandbox:
@@ -33,7 +37,7 @@ all:
     # piholes
     piholes:
       hosts:
-        pihole-prod:
+        pihole-a:
           ansible_host: 192.168.20.15
-        pihole-lab:
+        pihole-b:
           ansible_host: 192.168.69.10

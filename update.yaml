@@ -1,7 +1,7 @@
 ---
 ## Handles updating access and packages on defined hosts.
 
-  - hosts: srv:pihole:proxmox:tinyprox
+  - hosts: srv:piholes:proxmox:tinyprox
     become: yes
     vars_files:
       - 'vars/vault.yaml'

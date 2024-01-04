@@ -12,7 +12,6 @@
           user: "{{ ansible_user }}"
           state: present
           key: https://github.com/economycomfort.keys
-
       - name: update packages
         ansible.builtin.package:
           name: '*'

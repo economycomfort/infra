@@ -1,21 +1,20 @@
 ---
 ## Random plays for testing.
 
-  - hosts: proxmox
+  - hosts: servo
     vars_files:
       - 'vars/common.yaml'
     become: yes
 
     tasks:
       # Add Backup disk to /etc/fstab
-      - name: Add backup drive to fstab
-        ansible.posix.mount:
-          path: "{{ proxmox_backup_disk_mount }}"
-          src: "LABEL={{ proxmox_backup_disk_label }}"
-          fstype: ext4
-          opts: "{{ proxmox_backup_disk_opts }}"
-          state: present
-        #when: proxmox_backup_disk_mount is defined
+      - name: Copy sanoid configuration template
+        ansible.builtin.template:
+          src: servo/sanoid/sanoid.conf.j2
+          dest: /etc/sanoid/sanoid.conf
+          owner: root
+          group: root
+          mode: 0644
     
     #roles:
     #  - role: geerlingguy.nfs

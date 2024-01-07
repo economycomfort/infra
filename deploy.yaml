@@ -84,9 +84,7 @@
         when: 
           - zfshome.stat.exists == True
           - oldhome.stat.islnk == False
-    
     roles:
-      - role: buluma.mount
       - role: geerlingguy.docker
       - role: geerlingguy.nfs
       - role: vladgh.samba.server

@@ -19,6 +19,8 @@ zdatasets:
     mountpoint: /mnt/fast/appdata
   - name: fast/docker
     mountpoint: /var/lib/docker
+  - name: fast/downloads
+    mountpoint: /mnt/fast/downloads
   - name: fast/home
     mountpoint: /mnt/fast/home
   - name: tank/fast-snapshots
@@ -40,24 +42,6 @@ syncoid_dst_dataset: tank/fast-snapshots
 syncoid_exclude_patterns:
   - fast/docker/*
 
-######################
-###  buluma.mount  ###
-######################
-# Only create bind mounts on this host.
-mount_requests:
-  - path: /srv/nfs/proxmox
-    src: /mnt/tank/proxmox
-    opts: "bind,defaults,nofail,x-systemd.requires=zfs-mount.service"
-    fstype: none
-  - path: /srv/nfs/media
-    src: /mnt/tank/media
-    opts: "bind,defaults,nofail,x-systemd.requires=zfs-mount.service"
-    fstype: none
-  - path: /srv/nfs/appdata
-    src: /mnt/fast/appdata
-    opts: "bind,defaults,nofail,x-systemd.requires=zfs-mount.service"
-    fstype: none
-
 ############################
 ###  geerlingguy.docker  ###
 ############################
@@ -77,8 +61,8 @@ docker_users:
 ###  geerlingguy.nfs  ###
 #########################
 nfs_exports:
-  - "/srv/nfs/media             10.255.255.0/24(rw,sync)"
-  - "/srv/nfs/proxmox           10.255.255.10/32(rw,sync,no_root_squash)"
+  - "/mnt/tank/media             10.255.255.0/24(rw,sync)"
+  - "/mnt/tank/proxmox           10.255.255.10/32(rw,sync,no_root_squash,crossmnt)"
 
 ######################
 ###  grog.package  ###

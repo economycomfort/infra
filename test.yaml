@@ -7,7 +7,6 @@
     become: yes
 
     tasks:
-      # Add Backup disk to /etc/fstab
       - name: Copy sanoid configuration template
         ansible.builtin.template:
           src: servo/sanoid/sanoid.conf.j2
@@ -16,5 +15,5 @@
           group: root
           mode: 0644
     
-    #roles:
-    #  - role: geerlingguy.nfs
+    roles:
+      #- role: geerlingguy.nfs

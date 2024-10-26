@@ -7,7 +7,7 @@
     become: yes
 
     tasks:
-    # Sanoid configuration for automated ZFS snapshots
+     #Sanoid configuration for automated ZFS snapshots
       - name: Create /etc/sanoid directory
         ansible.builtin.file:
           path: /etc/sanoid
@@ -22,47 +22,47 @@
           group: root
           mode: 0644
 
-      #- name: Install syncoid cron
+      - name: Install syncoid cron
+        ansible.builtin.template:
+          src: servo/sanoid/syncoid-cron.j2
+          dest: /etc/cron.d/syncoid
+          owner: root
+          group: root
+          mode: 0644
+
+      - name: Restart cron
+        command: service cron restart
+
+      #- name: Install syncoid systemd service
       #  ansible.builtin.template:
-      #    src: servo/sanoid/syncoid-cron.j2
-      #    dest: /etc/cron.d/syncoid
+      #    src: servo/sanoid/syncoid.service.j2
+      #    dest: /etc/systemd/system/syncoid.service
       #    owner: root
       #    group: root
-      #    mode: 0644
+      #    mode: 0755
+      #    lstrip_blocks: yes
 
-      #- name: Restart cron
-      #  command: service cron restart
-
-      - name: Install syncoid systemd service
-        ansible.builtin.template:
-          src: servo/sanoid/syncoid.service.j2
-          dest: /etc/systemd/system/syncoid.service
-          owner: root
-          group: root
-          mode: 0755
-          lstrip_blocks: yes
-
-      - name: Install syncoid systemd timer
-        ansible.builtin.template:
-          src: servo/sanoid/syncoid.timer.j2
-          dest: /etc/systemd/system/syncoid.timer
-          owner: root
-          group: root
-          mode: 0755
-          lstrip_blocks: yes
+      #- name: Install syncoid systemd timer
+      #  ansible.builtin.template:
+      #    src: servo/sanoid/syncoid.timer.j2
+      #    dest: /etc/systemd/system/syncoid.timer
+      #    owner: root
+      #    group: root
+      #    mode: 0755
+      #    lstrip_blocks: yes
 
       - name: Enable syncoid systemd service
         ansible.builtin.systemd:
           name: syncoid
-          enabled: yes
-          state: started
+          enabled: no
+          state: stopped
           masked: no
 
       - name: Enable syncoid systemd timer
         ansible.builtin.systemd:
           name: syncoid.timer
-          enabled: yes
-          state: started
+          enabled: no
+          state: stopped
     
     #roles:
     #  - role: geerlingguy.nfs

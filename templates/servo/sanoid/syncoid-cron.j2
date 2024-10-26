@@ -3,8 +3,18 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 SRC="fast"
 DST="tank/fast-snapshots"
-EXCLUDES=("fast/docker/*")
+EXCLUDES=(
+{% for e in syncoid_exclude_patterns %}
+  {% if not loop.last %}
+    "{{ e }}",
+  {% else %}
+    "{{ e }}"
+  {% endif %}
+{% endfor %}
+)
 
+# Old command, seemed to have issues.
 #45 3 * * * root syncoid -r --no-sync-snap --create-bookmark --sendoptions="-w" --exclude="$EXCLUDES[*]" --quiet $SRC $DST
 
+# Newer command, seems to work better.
 45 3 * * * root syncoid $SRC $DST -r --force-delete --sendoptions="-w" --exclude="$EXCLUDES[*]"

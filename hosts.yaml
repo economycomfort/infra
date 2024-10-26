@@ -6,38 +6,23 @@
 #
 all:
   hosts:  # individual hosts
-    
-    # proxmox
-    proxmox:
+
+    # servo
+    servo:
       ansible_host: 192.168.20.10
 
     # tinyprox
     tinyprox:
       ansible_host: 192.168.20.11
- 
-    # tinyprox
-    redteam:
-      ansible_host: 192.168.69.20
-    
-    # GCP      
-    #sandbox:
-    #  ansible_host: sandbox.brooks.haus
 
-  
+    # homebot
+    homebot:
+      ansible_host: 192.168.20.201
+
   children: # groups of hosts
-    
-    # prod hosts
-    srv:
-      hosts:
-        servo:
-          ansible_host: 192.168.20.200
-        homebot:
-          ansible_host: 192.168.20.201
     
     # piholes
     piholes:
       hosts:
         pihole-a:
           ansible_host: 192.168.20.15
-        pihole-b:
-          ansible_host: 192.168.69.10

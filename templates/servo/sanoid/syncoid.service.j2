@@ -8,7 +8,8 @@ Documentation=man:syncoid(8)
 [Service]
 Type=oneshot
 ExecStart=syncoid {{ syncoid_src_dataset }} {{ syncoid_dst_dataset }} \
-    -r --quiet --no-sync-snap --create-bookmark --sendoptions="-w" \
+    -r --sendoptions="-w" --recvoptions="o recordsize=1M o compression=zstd" \
+    --force-delete
 {% for e in syncoid_exclude_patterns %}
   {% if not loop.last %}
     --exclude="{{ e }}" \

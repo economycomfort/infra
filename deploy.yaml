@@ -4,8 +4,8 @@
   - hosts: all
     become: yes
     vars_files:
-      - 'vars/vault.yaml'
-      - 'vars/common.yaml'
+      - vars/vault.yaml
+      - vars/common.yaml
     
     pre_tasks:     
       - name: import keys from github
@@ -25,9 +25,10 @@
   - hosts: proxmox:tinyprox
     tasks:
     roles:
-      - role: dab-proxmox
-      - role: simoncaron.pve_addons
-      - role: geerlingguy.ntp
+      #- role: geerlingguy.ntp
+      #- role: simoncaron.pve_addons
+      #- role: dab-proxmox
+      - role: dab-dotfiles
  
   ###############
   ###  servo  ###
@@ -134,18 +135,18 @@
       #    mode: 0755
       #    lstrip_blocks: yes
 
-      - name: Enable syncoid systemd service
-        ansible.builtin.systemd:
-          name: syncoid
-          enabled: no
-          state: stopped
-          masked: no
+      #- name: Enable syncoid systemd service
+      #  ansible.builtin.systemd:
+      #    name: syncoid
+      #    enabled: no
+      #    state: stopped
+      #    masked: no
 
-      - name: Enable syncoid systemd timer
-        ansible.builtin.systemd:
-          name: syncoid.timer
-          enabled: no
-          state: stopped
+      #- name: Enable syncoid systemd timer
+      #  ansible.builtin.systemd:
+      #    name: syncoid.timer
+      #    enabled: no
+      #    state: stopped
 
   #################
   ###  homebot  ###

@@ -9,7 +9,7 @@ ansible_python_interpreter: /usr/bin/python3
 ##  dab-proxmox  ##
 ###################
 proxmox_email: d+proxmox@vhf.sh
-proxmox_timezone: "{{ common_timezone }}"
+proxmox_timezone: US/Eastern
 proxmox_backup_dirs:  # where pve /etc backups go
   - "/mnt/pve/ext-ssd/pve-config"
   - "/mnt/pve/servo-nfs/pve-config"
@@ -31,6 +31,7 @@ package_list:
   - name: libguestfs-tools
   - name: lm-sensors
   - name: net-tools
+  - name: smartmontools
   - name: ssh-import-id
   - name: toilet
   - name: tree
@@ -43,7 +44,7 @@ package_list:
 ###  geerlingguy.ntp  ###
 #########################
 ntp_enabled: yes
-ntp_timezone: "{{ common_timezone }}"
+ntp_timezone: US/Eastern
 ntp_package: chrony     # ntp or chrony
 ntp_daemon: chrony
 ntp_config_file: /etc/chrony/chrony.conf

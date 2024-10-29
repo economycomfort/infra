@@ -37,7 +37,8 @@
   # Set timezone
   - name: Set timezone
     community.general.timezone:
-      name: "{{ proxmox_timezone }}"
+      #name: "{{ proxmox_timezone }}"
+      name: US/Eastern
 
   # Creates directory for Proxmox-specific scripts
   - name: Create script directory
@@ -110,9 +111,9 @@
       mode: 0644
 
   # Determine if host is booted UEFI or legacy MBR
-  - name: Determine UEFI or MBR
+  - name: Determine Grub or systemd-boot 
     ansible.builtin.stat:
-      path: /sys/firmware/efi
+      path: /etc/kernel/cmdline # I think this is valid?
     register: p  # if p.stat.isdir is defined, then UEFI
   
   # Modify GRUB config (if booted via MBR)

@@ -15,6 +15,10 @@ all:
     tinyprox:
       ansible_host: 192.168.20.11
 
+    # proxmox
+    proxmox:
+      ansible_host: 192.168.20.10
+
     # homebot
     homebot:
       ansible_host: 192.168.20.201

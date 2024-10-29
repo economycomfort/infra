@@ -15,7 +15,7 @@ RETAIN_DAYS="{{ proxmox_backup_retention_days }}"               # days of backup
 BACKUP_DEST_PATHS=(            # where backups are copied to
 {% for i in proxmox_backup_dests %}
 {% if not loop.last %}
-  "{{ i }}"
+  "{{ i }}",
 {% else %}
   "{{ i }}"
 {% endif %}
@@ -24,7 +24,7 @@ BACKUP_DEST_PATHS=(            # where backups are copied to
 BACKUP_SOURCE_LIST=(           # files/folders to be backed up
 {% for i in proxmox_backup_list %}
 {% if not loop.last %}
-  "{{ i }}"
+  "{{ i }}",
 {% else %}
   "{{ i }}"
 {% endif %}

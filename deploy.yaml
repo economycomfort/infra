@@ -22,7 +22,7 @@
   #################
   ###  proxmox  ###
   #################
-  - hosts: proxmox:tinyprox
+  - hosts: proxmox
     tasks:
     roles:
       #- role: geerlingguy.ntp

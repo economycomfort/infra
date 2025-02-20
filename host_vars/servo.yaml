@@ -1,5 +1,5 @@
 ---
-target_os: debian
+target_os: ubuntu
 ansible_user: david
 ansible_python_interpreter: /usr/bin/python3
 

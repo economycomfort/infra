@@ -1,7 +1,7 @@
 ---
 ## Random plays for testing.
 
-  - hosts: servo
+  - hosts: testy
     vars_files:
       - 'vars/common.yaml'
       - 'vars/vault.yaml'
@@ -10,4 +10,4 @@
     tasks:
      
     roles:
-      - role: vladgh.samba.server
+      - role: geerlingguy.nfs

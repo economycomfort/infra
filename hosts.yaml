@@ -9,11 +9,11 @@ all:
 
     # servo
     servo:
-      ansible_host: 192.168.20.10
+      ansible_host: 192.168.20.200
 
-    # tinyprox
-    tinyprox:
-      ansible_host: 192.168.20.11
+    # testy
+    testy:
+      ansible_host: 192.168.20.184
 
     # proxmox
     proxmox:

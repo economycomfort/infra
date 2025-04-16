@@ -4,17 +4,8 @@ servo:
 homebot:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit homebot
 
-redteam:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit redteam
-
 proxmox:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit proxmox
-
-tinyprox:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit tinyprox
-
-docker-media:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit docker-media
 
 deploy:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password

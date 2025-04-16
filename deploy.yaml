@@ -19,20 +19,16 @@
       - role: dab-motd
       #- { role: dab-dotfiles, become: no }
 
-  #################
-  ###  proxmox  ###
-  #################
+
   - hosts: proxmox
     tasks:
     roles:
-      #- role: geerlingguy.ntp
-      #- role: simoncaron.pve_addons
-      #- role: dab-proxmox
+      - role: geerlingguy.ntp
+      - role: simoncaron.pve_addons
+      - role: dab-proxmox
       - role: dab-dotfiles
  
-  ###############
-  ###  servo  ###
-  ###############
+
   - hosts: servo
     become: yes
     
@@ -148,9 +144,7 @@
       #    enabled: no
       #    state: stopped
 
-  #################
-  ###  homebot  ###
-  #################
+
   - hosts: homebot
     become: yes
     tasks:
@@ -164,19 +158,29 @@
 
     roles:
       - role: geerlingguy.docker
-  
-  ###################
-  ###  pihole(s)  ###
-  ###################
+
+
   - hosts: piholes
     become: yes
     tasks:
       - name: "Install Pihole"
         ansible.builtin.command: "curl -sSL https://install.pi-hole.net | bash"
   
-  #################
-  ###  redteam  ###
-  #################
-  - hosts: redteam
+
+  - hosts: crow
     become: yes
+    tasks:
     roles:
+    - role: dab-dotfiles
+    - role: geerlingguy.docker
+
+
+  - hosts: homebot-lxc
+    become: yes
+    tasks:
+    roles:
+    - role: dab-dotfiles
+    - role: geerlingguy.docker
+   
+
+

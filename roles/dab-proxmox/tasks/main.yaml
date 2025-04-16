@@ -110,11 +110,10 @@
       backup: yes
       mode: 0644
 
-  # Determine if host is booted UEFI or legacy MBR
-  - name: Determine Grub or systemd-boot 
+  - name: Determine if booted from MBR or UEFI
     ansible.builtin.stat:
-      path: /etc/kernel/cmdline # I think this is valid?
-    register: p  # if p.stat.isdir is defined, then UEFI
+      path: /sys/firmware/efi
+    register: uefi_mode
   
   # Modify GRUB config (if booted via MBR)
   - name: Enable IOMMU in GRUB config
@@ -123,7 +122,7 @@
       regexp: "^GRUB_CMDLINE_LINUX_DEFAULT="
       line: GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt"
       backup: yes
-    when: p.stat.isdir is not defined
+    when: not uefi_mode.stat.exists
     notify:
     - Update GRUB
     - Reboot warning
@@ -132,10 +131,10 @@
   - name: Enable IOMMU in UEFI cmdline
     ansible.builtin.lineinfile:
       path: /etc/kernel/cmdline
-      regexp: "^root=ZFS" # maybe not the best check if running EFI+LVM, but why
+      regexp: "^root=ZFS" # maybe not the best check if running EFI+LVM
       line: root=ZFS=rpool/ROOT/pve-1 boot=zfs intel_iommu=on iommu=pt
       backup: yes
-    when: p.stat.isdir is defined and p.stat.isdir
+    when: uefi_mode.stat.exists
     notify:
     - Update UEFI
     - Reboot warning

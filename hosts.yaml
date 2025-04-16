@@ -7,26 +7,21 @@
 all:
   hosts:  # individual hosts
 
-    # servo
     servo:
-      ansible_host: 192.168.20.200
+      ansible_host: 10.9.1.200
 
-    # testy
-    testy:
-      ansible_host: 192.168.20.184
+    crow:
+      ansible_host: 10.9.1.202
 
-    # proxmox
     proxmox:
-      ansible_host: 192.168.20.10
+      ansible_host: 10.9.1.10
 
-    # homebot
     homebot:
-      ansible_host: 192.168.20.201
+      ansible_host: 10.9.1.201
 
   children: # groups of hosts
     
-    # piholes
     piholes:
       hosts:
         pihole-a:
-          ansible_host: 192.168.20.15
+          ansible_host: 10.9.1.15

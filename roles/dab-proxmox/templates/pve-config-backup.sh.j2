@@ -15,7 +15,7 @@ RETAIN_DAYS="{{ proxmox_backup_retention_days }}"               # days of backup
 BACKUP_DEST_PATHS=(            # where backups are copied to
 {% for i in proxmox_backup_dests %}
 {% if not loop.last %}
-  "{{ i }}",
+  "{{ i }}"
 {% else %}
   "{{ i }}"
 {% endif %}
@@ -24,7 +24,7 @@ BACKUP_DEST_PATHS=(            # where backups are copied to
 BACKUP_SOURCE_LIST=(           # files/folders to be backed up
 {% for i in proxmox_backup_list %}
 {% if not loop.last %}
-  "{{ i }}",
+  "{{ i }}"
 {% else %}
   "{{ i }}"
 {% endif %}
@@ -33,7 +33,7 @@ BACKUP_SOURCE_LIST=(           # files/folders to be backed up
 
 tmp_file="/tmp/${BACKUP_FILE_PREFIX}-$(date +%Y%m%d-%H%M%S).tar.gz"
 
-tar -czf ${tmp_file} ${BACKUP_SOURCE_LIST[@]}
+tar --ignore-failed-read --warning=no-file-changed -czf ${tmp_file} ${BACKUP_SOURCE_LIST[@]}
 for i in ${BACKUP_DEST_PATHS[@]}; do
   cp ${tmp_file} $i
   find ${i}/${BACKUP_FILE_PREFIX}-* -mindepth 0 -maxdepth 0 -depth -mtime +${RETAIN_DAYS} -delete

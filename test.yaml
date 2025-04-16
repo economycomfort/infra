@@ -1,13 +1,22 @@
 ---
 ## Random plays for testing.
 
-  - hosts: testy
-    vars_files:
-      - 'vars/common.yaml'
-      - 'vars/vault.yaml'
-    become: yes
-
+  - hosts: proxmox
     tasks:
-     
+
+      # Determine if host is booted UEFI or legacy MBR
+    - name: Determine is BIOS or UEFI
+      ansible.builtin.stat:
+        path: /sys/firmware/efi
+      register: uefi_mode
+
+    - name: Enable IOMMU in UEFI cmdline
+      ansible.builtin.lineinfile:
+        path: /etc/kernel/cmdline
+        regexp: "^root=ZFS" # maybe not the best check if running EFI+LVM
+        line: root=ZFS=rpool/ROOT/pve-1 boot=zfs intel_iommu=on iommu=pt
+        backup: yes
+      when: uefi_mode.stat.exists
+      
     roles:
-      - role: geerlingguy.nfs
+      #- dab-proxmox

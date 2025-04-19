@@ -1,0 +1,24 @@
+---
+## Builds proxmox hypervisor.
+
+  - hosts: proxmox
+    become: false
+    vars_files:
+      - vars/vault.yaml
+      - vars/common.yaml
+    
+    pre_tasks:     
+      - name: import keys from github
+        ansible.posix.authorized_key:
+          user: "{{ ansible_user }}"
+          state: present
+          key: https://github.com/economycomfort.keys
+
+    tasks:
+      
+    roles:
+      - role: grog.package
+      - role: geerlingguy.ntp
+      - role: simoncaron.pve_addons
+      - role: dab-proxmox
+      - role: dab-dotfiles

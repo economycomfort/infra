@@ -10,8 +10,8 @@ all:
     servo:
       ansible_host: 10.9.1.200
 
-    crow:
-      ansible_host: 10.9.1.202
+    tailscale:
+      ansible_host: 10.9.1.222
 
     proxmox:
       ansible_host: 10.9.1.10

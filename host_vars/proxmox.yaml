@@ -8,7 +8,7 @@ ansible_python_interpreter: /usr/bin/python3
 ###################
 ##  dab-proxmox  ##
 ###################
-proxmox_email: d+proxmox@vhf.sh
+#proxmox_email:  # see vault.yaml
 proxmox_timezone: US/Eastern
 proxmox_backup_dirs:  # where pve /etc backups go
   - "/mnt/pve/ext-ssd/pve-config"

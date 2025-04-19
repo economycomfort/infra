@@ -9,7 +9,6 @@ proxmox_backup_systemd_service: pve-config-backup
 proxmox_backup_systemd_timer: pve-config-backup.timer
 proxmox_backup_dests:  # where pve /etc backups go
   - /mnt/pve/ext-ssd/pve-etc
-  - /mnt/pve/servo-nfs/pve-etc
 proxmox_backup_list:  # Files/directories to include in backup.
   - /etc/aliases 
   - /etc/cron* 

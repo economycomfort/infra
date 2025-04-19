@@ -1,7 +1,7 @@
 ---
-## Handles initial deployment and configuration of defined hosts.
+## Builds servo VM.
 
-  - hosts: all
+  - hosts: servo
     become: true
     vars_files:
       - vars/vault.yaml
@@ -14,28 +14,6 @@
           state: present
           key: https://github.com/economycomfort.keys
 
-    roles:
-      - role: grog.package
-      - role: dab-motd
-      #- { role: dab-dotfiles, become: no }
-
-
-  - hosts: proxmox
-    become: false
-    vars_files:
-      - vars/vault.yaml
-    tasks:
-    roles:
-      - role: geerlingguy.ntp
-      - role: simoncaron.pve_addons
-      - role: dab-proxmox
-      - role: dab-dotfiles
- 
-
-  - hosts: servo
-    become: true
-    
-    pre_tasks:
       # Checks to see if defined ZFS pools are mounted. Playbook fails if not.
       # These pools should be mounted before running this playbook.
       - name: Ensure ZFS pool(s) are imported
@@ -64,7 +42,7 @@
           extended: true
         when: mount_status[ansible_loop.index0] == 'no'
 
-      # On the storage host, we're using an alternate path for /home.
+      # The storage host uses an alternate path for /home.
       # The following tasks create a symlink for continuity.
       - name: Checking for existence of zhome directory
         ansible.builtin.stat:
@@ -84,7 +62,9 @@
         when: 
           - zfshome.stat.exists == True
           - oldhome.stat.islnk == False
+      
     roles:
+      - role: grog.package
       - role: geerlingguy.docker
       - role: geerlingguy.nfs
       - role: vladgh.samba.server
@@ -146,26 +126,4 @@
       #    name: syncoid.timer
       #    enabled: no
       #    state: stopped
-
-
-  - hosts: homebot
-    become: true
-    tasks:
-      - name: Insert cronjob to sync docker service configuration to servo
-        ansible.builtin.cron:
-          name: Backup homebot docker services to servo
-          minute: 40
-          hour: 23
-          job: "rsync -avzq --del ~/appdata/ servo:/mnt/fast/appdata/homebot/"
-          user: "{{ ansible_user }}"
-
-    roles:
-      - role: geerlingguy.docker
-
-
-  - hosts: piholes
-    become: true
-    tasks:
-      - name: "Install Pihole"
-        ansible.builtin.command: "curl -sSL https://install.pi-hole.net | bash"
 

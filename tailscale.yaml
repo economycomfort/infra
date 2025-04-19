@@ -1,0 +1,25 @@
+---
+## Builds tailscale.
+
+  - hosts: tailscale
+    become: true
+    vars_files:
+      - vars/vault.yaml
+      - vars/common.yaml
+    
+    pre_tasks:     
+      - name: import keys from github
+        ansible.posix.authorized_key:
+          user: "{{ ansible_user }}"
+          state: present
+          key: https://github.com/economycomfort.keys
+
+    tasks:
+      
+    roles:
+      - role: grog.package
+      - role: dab-motd
+      - role: dab-tailscale
+      # Uncomment to use dotfiles role
+      - role: dab-dotfiles
+

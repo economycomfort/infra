@@ -1,11 +1,14 @@
 servo:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit servo
+	ansible-playbook servo.yaml --vault-password-file .vault-password
 
 homebot:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit homebot
+	ansible-playbook homebot.yaml --vault-password-file .vault-password
 
 proxmox:
-	ansible-playbook deploy.yaml --vault-password-file .vault-password --limit proxmox
+	ansible-playbook proxmox.yaml --vault-password-file .vault-password
+
+tailscale:
+	ansible-playbook tailscale.yaml --vault-password-file .vault-password
 
 deploy:
 	ansible-playbook deploy.yaml --vault-password-file .vault-password

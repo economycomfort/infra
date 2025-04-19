@@ -1,5 +1,4 @@
 ---
-## Customizes a Proxmox host.
 
   # Run a few sanity checks to validate this playbook is run against something
   # that looks like a Proxmox host.  If not, fail.
@@ -37,8 +36,7 @@
   # Set timezone
   - name: Set timezone
     community.general.timezone:
-      #name: "{{ proxmox_timezone }}"
-      name: US/Eastern
+      name: "{{ proxmox_timezone }}"
 
   # Creates directory for Proxmox-specific scripts
   - name: Create script directory

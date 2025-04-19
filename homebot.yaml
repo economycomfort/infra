@@ -1,0 +1,31 @@
+---
+## Builds homebot VM.
+
+  - hosts: homebot
+    become: true
+    vars_files:
+      - vars/vault.yaml
+      - vars/common.yaml
+    
+    pre_tasks:     
+      - name: import keys from github
+        ansible.posix.authorized_key:
+          user: "{{ ansible_user }}"
+          state: present
+          key: https://github.com/economycomfort.keys
+
+    tasks:
+      - name: Insert cronjob to sync docker service configuration to servo
+        ansible.builtin.cron:
+          name: Backup homebot docker services to servo
+          minute: 40
+          hour: 23
+          job: "rsync -avzq --del ~/appdata/ servo:/mnt/fast/appdata/homebot/"
+          user: "{{ ansible_user }}"
+
+    roles:
+      - role: grog.package
+      - role: dab-motd
+      - role: geerlingguy.docker
+      - role: dab-dotfiles
+      

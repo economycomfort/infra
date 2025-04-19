@@ -3,17 +3,27 @@ target_os: debian
 ansible_user: david
 ansible_python_interpreter: /usr/bin/python3
 
+#######################
+###  dab-tailscale  ###
+#######################
+tailscale_routes:
+  - 10.9.1.0/24
+tailscale_exit_node: true
+
 ######################
 ###  grog.package  ###
 ###################### 
 package_list:
   - name: curl
   - name: git
+  - name: gpg
   - name: htop
   - name: net-tools
   - name: python3
   - name: ssh-import-id
+  #- name: tailscale  # handled by dab-tailscale
   - name: toilet
-  - name: tmux
-  - name: tree
+  - name: wget
   - name: zsh
+
+

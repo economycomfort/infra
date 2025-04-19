@@ -1,0 +1,75 @@
+---
+# ngl this is almost straight from ChatGPT.  It's late and I'm tired.
+  - name: Gather OS release info
+    ansible.builtin.setup:
+      filter: ansible_distribution*
+  
+  - name: Set distro codename fact
+    set_fact:
+      distro_codename: "{{ ansible_distribution_release | lower }}"
+
+  - name: Add Tailscale GPG key
+    ansible.builtin.apt_key:
+      url: "https://pkgs.tailscale.com/stable/debian/{{ distro_codename }}.gpg"
+      state: present
+
+  - name: Add Tailscale apt repository
+    ansible.builtin.apt_repository:
+      repo: "deb https://pkgs.tailscale.com/stable/debian {{ distro_codename }} main"
+      state: present
+      filename: tailscale
+
+  - name: Update apt cache
+    ansible.builtin.apt:
+      update_cache: yes
+
+  - name: Install Tailscale
+    ansible.builtin.apt:
+      name: tailscale
+      state: present
+
+  - name: Enable and start tailscaled
+    ansible.builtin.systemd:
+      name: tailscaled
+      enabled: yes
+      state: started
+
+  - name: Check current Tailscale status
+    ansible.builtin.command: tailscale status
+    register: tailscale_status
+    failed_when: false
+    changed_when: false
+
+  - name: Set Tailscale not_authenticated fact
+    set_fact:
+      tailscale_not_authenticated: >-
+        {{ 'Logged out.' in tailscale_status.stdout }}
+
+  - name: Build Tailscale options
+    set_fact:
+      tailscale_options: >-
+        {{
+          ([] if not tailscale_exit_node else ['--advertise-exit-node'])
+          + ([] if tailscale_routes | length == 0 else ['--advertise-routes=' + (tailscale_routes | join(','))])
+        }}
+
+  - name: Join Tailscale options into string
+    set_fact:
+      tailscale_options: "{{ tailscale_options | join(' ') }}"
+
+  - name: Show tailscale options
+    debug:
+      msg: "Tailscale options: {{ tailscale_options }}"
+
+  - name: Run tailscale up with auth key if not authenticated
+    ansible.builtin.command: >
+      tailscale up {{ tailscale_options }} --authkey {{ tailscale_authkey }}
+    register: tailscale_up_result
+    when: tailscale_not_authenticated
+    ignore_errors: true
+
+  - name: Re-run tailscale up without auth key to apply config (if already logged in)
+    ansible.builtin.command: >
+      tailscale up {{ tailscale_options }}
+    when: 
+      - not tailscale_not_authenticated

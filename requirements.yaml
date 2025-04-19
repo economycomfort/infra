@@ -7,7 +7,6 @@ collections:
   - name: vladgh.samba
 
 roles:
-  - name: buluma.mount
   - name: geerlingguy.docker
   - name: geerlingguy.dotfiles
   - name: geerlingguy.github-users

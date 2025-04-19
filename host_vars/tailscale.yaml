@@ -15,6 +15,7 @@ tailscale_exit_node: true
 ###################### 
 package_list:
   - name: curl
+  - name: ethtool
   - name: git
   - name: gpg
   - name: htop

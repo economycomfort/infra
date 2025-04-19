@@ -34,6 +34,53 @@
       enabled: yes
       state: started
 
+  - name: Enable IP forwarding (IPv4)
+    sysctl:
+      name: net.ipv4.ip_forward
+      value: '1'
+      state: present
+      reload: yes
+
+  - name: Enable IP forwarding (IPv6)
+    sysctl:
+      name: net.ipv6.conf.all.forwarding
+      value: '1'
+      state: present
+      reload: yes 
+
+  - name: Ensure ethtool is installed
+    apt:
+      name: ethtool
+      state: present
+
+  - name: Create systemd override to disable GRO on eth0
+    copy:
+      dest: /etc/systemd/system/disable-gro-eth0.service
+      content: |
+        [Unit]
+        Description=Disable GRO on eth0
+        After=network.target
+
+        [Service]
+        Type=oneshot
+        ExecStart=/sbin/ethtool -K eth0 gro off
+        RemainAfterExit=true
+
+        [Install]
+        WantedBy=multi-user.target
+    notify: Reload systemd and enable disable-gro
+
+  - name: Enable and start disable-gro service
+    systemd:
+      name: disable-gro-eth0.service
+      enabled: yes
+      state: started
+
+  - name: Ensure the disable-gro service is enabled at boot
+    systemd:
+      name: disable-gro-eth0.service
+      enabled: yes
+
   - name: Check current Tailscale status
     ansible.builtin.command: tailscale status
     register: tailscale_status

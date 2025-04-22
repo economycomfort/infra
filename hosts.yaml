@@ -18,10 +18,3 @@ all:
 
     homebot:
       ansible_host: 10.9.1.201
-
-  children: # groups of hosts
-    
-    piholes:
-      hosts:
-        pihole-a:
-          ansible_host: 10.9.1.15

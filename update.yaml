@@ -1,21 +1,24 @@
 ---
 ## Handles updating access and packages on defined hosts.
 
-  - hosts: servo:piholes:proxmox
+  - hosts: '*'
     become: yes
     vars_files:
       - 'vars/vault.yaml'
       - 'vars/common.yaml'
+
     tasks:
       - name: import keys from github
         ansible.posix.authorized_key:
           user: "{{ ansible_user }}"
           state: present
           key: https://github.com/economycomfort.keys
+          
       - name: update packages
         ansible.builtin.package:
           name: '*'
           state: latest
+
     roles:
       - role: dab-motd
 
@@ -23,8 +26,3 @@
     tasks:
     roles:
       - role: simoncaron.pve_addons
-
-  - hosts: piholes
-    tasks:
-    - name: update pihole
-      ansible.builtin.command: 'pihole -up'

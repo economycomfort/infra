@@ -20,6 +20,5 @@
       - role: grog.package
       - role: dab-motd
       - role: dab-tailscale
-      # Uncomment to use dotfiles role
       - role: dab-dotfiles
 

@@ -1,6 +1,6 @@
 ---
-proxmox_become: no
-proxmox_clustering: no  # Disabling can be useful for single node
+proxmox_become: false
+proxmox_clustering: false  # Disabling can be useful for single node
 proxmox_scripts_dir: /root/scripts  # where proxmox scripts go
 proxmox_timezone: UTC
 proxmox_backup_file_prefix: pve-etc  # filename prefix of backup files

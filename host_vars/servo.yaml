@@ -47,7 +47,7 @@ syncoid_exclude_patterns:
 ############################
 docker_edition: "ce"
 docker_packages_state: latest
-docker_install_compose_plugin: yes
+docker_install_compose_plugin: true
 docker_compose_package: docker-compose-plugin
 docker_compose_package_state: latest
 docker_users: 
@@ -103,10 +103,10 @@ package_list:
 ###  vladgh.samba.server  ###
 #############################
 # Make sure the smb.conf template handles {{ ansible_managed }} appropriately at the top.
-samba_apple_extensions: yes
+samba_apple_extensions: true
 #samba_mitigate_cve_2017_7494: false  # mitigation unneeded and breaks share browsing
 samba_guest_account: nobody
-samba_load_homes: yes  # shares user $HOME automatically
+samba_load_homes: true  # shares user $HOME automatically
 samba_log: /var/log/samba.log
 samba_log_level: 1
 samba_log_size: 10000
@@ -115,9 +115,9 @@ samba_shares:
   - name: media
     comment: A place for pirates.
     path: /mnt/tank/media
-    public: no
-    guest_ok: no
-    writable: yes
+    public: false
+    guest_ok: false
+    writable: true
   - name: timemachine
     comment: MacOS backups.
     # This may make a literal "%U" directory to serve, vs. extrapolating to the Samba user.

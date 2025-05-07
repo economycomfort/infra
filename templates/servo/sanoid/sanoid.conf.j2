@@ -12,14 +12,14 @@ use_template = production
 recursive = yes
 process_children_only = yes
 
-[tank/fast-snapshots]
+[tank/backups/snapshots/fast]
 use_template = backup
 recursive = yes
 
 [tank/media]
 use_template = media
 
-[tank/proxmox]
+[tank/backups/proxmox]
 use_template = ignore
 
 #############################

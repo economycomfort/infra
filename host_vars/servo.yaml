@@ -23,12 +23,12 @@ zdatasets:
     mountpoint: /mnt/fast/downloads
   - name: fast/home
     mountpoint: /mnt/fast/home
-  - name: tank/fast-snapshots
-    mountpoint: /mnt/tank/fast-snapshots
-  - name: tank/timemachine
-    mountpoint: /mnt/tank/timemachine
-  - name: tank/proxmox
-    mountpoint: /mnt/tank/proxmox
+  - name: tank/backups
+    mountpoint: /mnt/tank/backups/snapshots/fast
+  - name: tank/backups/proxmox
+    mountpoint: /mnt/tank/backups/snapshots/proxmox
+  - name: tank/backups/timemachine
+    mountpoint: /mnt/tank/backups/snapshots/timemachine
   - name: tank/media
     mountpoint: /mnt/tank/media
 
@@ -38,7 +38,7 @@ zhome: /mnt/fast/home    # dataset for /home
 ##  Sanoid / Syncoid  ##
 ########################
 syncoid_src_dataset: fast
-syncoid_dst_dataset: tank/fast-snapshots
+syncoid_dst_dataset: tank/backups/snapshots/fast
 syncoid_exclude_patterns:
   - docker
 
@@ -122,5 +122,5 @@ samba_shares:
     comment: MacOS backups.
     # This may make a literal "%U" directory to serve, vs. extrapolating to the Samba user.
     # Manually correcting the file and restarting the process can fix.  Not sure why.
-    path: "/mnt/tank/timemachine/%U"
+    path: "/mnt/tank/backups/timemachine/%U"
     include_file: servo/samba/samba-timemachine.conf  # in master templates dir

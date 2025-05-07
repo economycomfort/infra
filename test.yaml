@@ -1,7 +1,7 @@
 ---
 ## Random plays for testing.
 
-  - hosts: tailscale
+  - hosts: servo
     become: yes
     vars_files:
       - vars/vault.yaml
@@ -9,4 +9,4 @@
     tasks:
       
     roles:
-      - dab-tailscale
+      - role: vladgh.samba.server

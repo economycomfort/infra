@@ -2,7 +2,7 @@
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 SRC="fast"
-DST="tank/fast-snapshots"
+DST="tank/backups/snapshots/fast"
 EXCLUDES=(
 {% for e in syncoid_exclude_patterns %}
   {% if not loop.last %}

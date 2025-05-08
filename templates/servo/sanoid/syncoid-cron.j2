@@ -6,7 +6,7 @@ DST="tank/backups/snapshots/fast"
 EXCLUDES=(
 {% for e in syncoid_exclude_patterns %}
   {% if not loop.last %}
-    "{{ e }}",
+    "{{ e }}"
   {% else %}
     "{{ e }}"
   {% endif %}

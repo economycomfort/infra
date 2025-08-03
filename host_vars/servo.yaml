@@ -3,9 +3,8 @@ target_os: ubuntu
 ansible_user: david
 ansible_python_interpreter: /usr/bin/python3
 
-#############
-###  ZFS  ###
-#############
+
+### ZFS
 # NOTE: The pool(s) and datasets below should be created and imported prior to 
 # playbook execution.
 zpools:
@@ -23,7 +22,7 @@ zdatasets:
     mountpoint: /mnt/fast/downloads
   - name: fast/home
     mountpoint: /mnt/fast/home
-  - name: tank/backups
+  - name: tank/backups/snapshots
     mountpoint: /mnt/tank/backups/snapshots/fast
   - name: tank/backups/proxmox
     mountpoint: /mnt/tank/backups/snapshots/proxmox
@@ -34,17 +33,13 @@ zdatasets:
 
 zhome: /mnt/fast/home    # dataset for /home
 
-########################
-##  Sanoid / Syncoid  ##
-########################
+### Sanoid / Syncoid
 syncoid_src_dataset: fast
 syncoid_dst_dataset: tank/backups/snapshots/fast
 syncoid_exclude_patterns:
   - docker
 
-############################
-###  geerlingguy.docker  ###
-############################
+### geerlingguy.docker
 docker_edition: "ce"
 docker_packages_state: latest
 docker_install_compose_plugin: true
@@ -52,21 +47,13 @@ docker_compose_package: docker-compose-plugin
 docker_compose_package_state: latest
 docker_users: 
   - david
-## Docker uses zfs by default if /var/lib/docker is itself zfs.
-#docker_daemon_options:
-#  storage-driver: "zfs"
-#  data-root: "/mnt/fast/docker"
 
-#########################
-###  geerlingguy.nfs  ###
-#########################
+### geerlingguy.nfs
 nfs_exports:
   - "/mnt/tank/media             10.255.255.0/24(rw,sync)"
   - "/mnt/tank/proxmox           10.255.255.11/32(rw,sync,no_root_squash,crossmnt)"
 
-######################
-###  grog.package  ###
-###################### 
+### grog.package
 package_list:
   - name: avahi-daemon
   - name: btop
@@ -99,9 +86,7 @@ package_list:
   - name: zfsutils-linux
   - name: zsh
 
-#############################
-###  vladgh.samba.server  ###
-#############################
+### vladgh.samba.server
 # Make sure the smb.conf template handles {{ ansible_managed }} appropriately at the top.
 samba_apple_extensions: true
 #samba_mitigate_cve_2017_7494: false  # mitigation unneeded and breaks share browsing

@@ -7,6 +7,9 @@ homebot:
 proxmox:
 	ansible-playbook proxmox.yaml --vault-password-file .vault-password
 
+sandbox:
+	ansible-playbook sandbox.yaml --vault-password-file .vault-password
+
 tailscale:
 	ansible-playbook tailscale.yaml --vault-password-file .vault-password
 

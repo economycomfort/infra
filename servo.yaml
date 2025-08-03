@@ -1,5 +1,5 @@
 ---
-## Builds servo VM.
+## Configures servo.
 
   - hosts: servo
     become: true
@@ -116,3 +116,4 @@
           enabled: no
           state: stopped
 
+          

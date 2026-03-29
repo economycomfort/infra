@@ -3,10 +3,6 @@
 
   - hosts: tailscale
     become: true
-    vars_files:
-      - vars/vault.yaml
-      - vars/common.yaml
-    
     pre_tasks:     
       - name: import keys from github
         ansible.posix.authorized_key:

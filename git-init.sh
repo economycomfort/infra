@@ -8,22 +8,28 @@
 #
 set -e
 
-vault="vars/vault.yaml"
-precommit=".git/hooks/pre-commit"
-
-info=$(cat <<EOT
-if ( git show :${vault} | grep -q "\$ANSIBLE_VAULT;" ); then
-  echo "\033[38;5;108mVault Encrypted. Safe to commit.\033[0m"
-else
-  echo "\033[38;5;208mVault not encrypted! Run 'make encrypt' and try again.\033[0m"
-  exit 1
-fi
-EOT
+vaults=(
+  "group_vars/all/vault.yaml"
+  "host_vars/servo/vault.yaml"
+  "host_vars/tailscale/vault.yaml"
 )
 
+precommit=".git/hooks/pre-commit"
+
+# Build the pre-commit hook script
+hook="#!/usr/bin/env bash\n"
+for vault in "${vaults[@]}"; do
+  hook+="if ( git show :${vault} | grep -q \"\\\$ANSIBLE_VAULT;\" ); then\n"
+  hook+="  echo \"\033[38;5;108m${vault} encrypted. Safe to commit.\033[0m\"\n"
+  hook+="else\n"
+  hook+="  echo \"\033[38;5;208m${vault} not encrypted! Run 'make encrypt' and try again.\033[0m\"\n"
+  hook+="  exit 1\n"
+  hook+="fi\n"
+done
+
 if [ -d .git/ ]; then
-	rm $precommit
-	echo "$info" >> $precommit
+	rm -f $precommit
+	echo -e "$hook" > $precommit
 fi
 
 chmod +x $precommit

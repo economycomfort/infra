@@ -3,8 +3,6 @@
 
   - hosts: servo
     become: yes
-    vars_files:
-      - vars/vault.yaml
     
     tasks:
       

@@ -7,13 +7,22 @@ Thanks to [Alex Kretzschmar](https://github.com/ironicbadger)'s various blog pos
 
 ## Getting started
 
-- Install git commit pre-hook:
-  `./git-init.sh`
+- Install git pre-commit hook:
+  `make gitinit`
 
-- Install requirements:
-  `ansible-galaxy install -r requirements.yaml`
+- Create a `.vault-password` file containing the Ansible Vault password (this file is gitignored).
+
+- Install Galaxy roles and collections:
+  ```bash
+  ansible-galaxy install -r requirements.yaml
+  ansible-galaxy collection install -r requirements.yaml
+  ```
 
 Edit away.
+
+## Claude Code
+
+This repo includes a `CLAUDE.md` file for use with [Claude Code](https://claude.ai/code). Useful for tasks like reviewing playbooks, adding new roles, or refactoring variables. Run `make encrypt` before committing — Claude cannot do this for you since it requires the vault password.
 
 ## License
 

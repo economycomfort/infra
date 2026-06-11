@@ -10,6 +10,9 @@ proxmox:
 sandbox:
 	ansible-playbook sandbox.yaml
 
+osint-sandbox:
+	ansible-playbook osint-sandbox.yaml
+
 tailscale:
 	ansible-playbook tailscale.yaml
 

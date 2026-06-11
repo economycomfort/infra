@@ -3,6 +3,17 @@ proxmox_become: false
 proxmox_clustering: false  # Disabling can be useful for single node
 proxmox_scripts_dir: /root/scripts  # where proxmox scripts go
 proxmox_timezone: UTC
+proxmox_lxc_template_storage: local
+proxmox_lxc_templates:
+  - name: debian-13-standard
+    section: system
+    match: '^debian-13-standard_.*_amd64\.tar\.(zst|xz|gz)$'
+proxmox_iso_dir: /var/lib/vz/template/iso
+proxmox_iso_images:
+  - name: kali-linux-installer-amd64
+    filename: kali-linux-2026.1-installer-amd64.iso
+    url: https://cdimage.kali.org/current/kali-linux-2026.1-installer-amd64.iso
+    checksum: sha256:271477ad6ea2676c7346576971b9acc2d32fabd9c2bbaf0e6302397626149306
 proxmox_backup_file_prefix: pve-etc  # filename prefix of backup files
 proxmox_backup_retention_days: 90  # number of daily backups to retain
 proxmox_backup_systemd_service: pve-config-backup

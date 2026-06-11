@@ -52,6 +52,70 @@
       dest: "{{ proxmox_scripts_dir }}/deploy-cloud-init-template.sh"
       mode: 0744
 
+  - name: Update Proxmox LXC template catalog
+    ansible.builtin.command:
+      argv:
+        - pveam
+        - update
+    changed_when: false
+    when: proxmox_lxc_templates | length > 0
+
+  - name: Resolve latest Proxmox LXC template names
+    ansible.builtin.shell: >
+      pveam available --section {{ item.section | default('system') | quote }} |
+      awk '{print $2}' |
+      grep -E {{ item.match | quote }} |
+      sort -V |
+      tail -n 1
+    loop: "{{ proxmox_lxc_templates }}"
+    loop_control:
+      label: "{{ item.name }}"
+    register: proxmox_lxc_template_candidates
+    changed_when: false
+    failed_when: proxmox_lxc_template_candidates.stdout | length == 0
+    when: proxmox_lxc_templates | length > 0
+
+  - name: List installed Proxmox LXC templates
+    ansible.builtin.command:
+      argv:
+        - pveam
+        - list
+        - "{{ proxmox_lxc_template_storage }}"
+    register: proxmox_lxc_installed_templates
+    changed_when: false
+    when: proxmox_lxc_templates | length > 0
+
+  - name: Download Proxmox LXC templates
+    ansible.builtin.command:
+      argv:
+        - pveam
+        - download
+        - "{{ proxmox_lxc_template_storage }}"
+        - "{{ item.stdout }}"
+    loop: "{{ proxmox_lxc_template_candidates.results | default([]) }}"
+    loop_control:
+      label: "{{ item.item.name }} -> {{ item.stdout }}"
+    when:
+      - item.stdout | length > 0
+      - (proxmox_lxc_template_storage ~ ':vztmpl/' ~ item.stdout) not in proxmox_lxc_installed_templates.stdout
+
+  - name: Create Proxmox ISO image directory
+    ansible.builtin.file:
+      path: "{{ proxmox_iso_dir }}"
+      state: directory
+      mode: 0755
+    when: proxmox_iso_images | length > 0
+
+  - name: Download Proxmox ISO images
+    ansible.builtin.get_url:
+      url: "{{ item.url }}"
+      dest: "{{ proxmox_iso_dir }}/{{ item.filename }}"
+      checksum: "{{ item.checksum }}"
+      mode: 0644
+    loop: "{{ proxmox_iso_images }}"
+    loop_control:
+      label: "{{ item.name }} -> {{ item.filename }}"
+
   # Copies PVE configuration backup script
   - name: Copy PVE host config backup script
     ansible.builtin.template:

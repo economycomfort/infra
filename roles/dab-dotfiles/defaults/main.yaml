@@ -1,6 +1,6 @@
 dotfiles_repo: 'https://github.com/economycomfort/dotfiles.git'
 dotfiles_dest: '${HOME}/.dotfiles'
-dotfiles_recursive: no
+dotfiles_recursive: yes
 dotfiles_install: "{{ dotfiles_dest }}/install"
 dotfiles_chsh: yes
 dotfiles_become: no

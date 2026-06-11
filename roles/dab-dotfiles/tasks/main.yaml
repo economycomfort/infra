@@ -12,7 +12,9 @@
   become: "{{ dotfiles_become | default('no') }}"
 
 - name: Run dotfiles install script
-  command: "{{ dotfiles_install }}"
+  command: ./install
+  args:
+    chdir: "{{ dotfiles_dest }}"
   become: "{{ dotfiles_become | default('no') }}"
 
 - name: Get zsh location

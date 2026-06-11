@@ -19,5 +19,8 @@ all:
     sandbox:
       ansible_host: 10.9.1.223
 
+    osint-sandbox:
+      ansible_host: 10.9.69.69
+
     tailscale:
       ansible_host: 10.9.1.222

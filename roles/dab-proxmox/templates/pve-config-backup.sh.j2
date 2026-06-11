@@ -33,9 +33,9 @@ BACKUP_SOURCE_LIST=(           # files/folders to be backed up
 
 tmp_file="/tmp/${BACKUP_FILE_PREFIX}-$(date +%Y%m%d-%H%M%S).tar.gz"
 
-tar --ignore-failed-read --warning=no-file-changed -czf ${tmp_file} ${BACKUP_SOURCE_LIST[@]}
-for i in ${BACKUP_DEST_PATHS[@]}; do
-  cp ${tmp_file} $i
-  find ${i}/${BACKUP_FILE_PREFIX}-* -mindepth 0 -maxdepth 0 -depth -mtime +${RETAIN_DAYS} -delete
+tar --ignore-failed-read --warning=no-file-changed -czf "${tmp_file}" "${BACKUP_SOURCE_LIST[@]}"
+for i in "${BACKUP_DEST_PATHS[@]}"; do
+  cp "${tmp_file}" "$i"
+  find "$i" -maxdepth 1 -type f -name "${BACKUP_FILE_PREFIX}-*" -mtime "+${RETAIN_DAYS}" -delete
 done
-rm ${tmp_file}
+rm "${tmp_file}"

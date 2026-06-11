@@ -14,6 +14,9 @@ proxmox_iso_images:
     filename: kali-linux-2026.1-installer-amd64.iso
     url: https://cdimage.kali.org/current/kali-linux-2026.1-installer-amd64.iso
     checksum: sha256:271477ad6ea2676c7346576971b9acc2d32fabd9c2bbaf0e6302397626149306
+proxmox_iommu_kernel_args:
+  - intel_iommu=on
+  - iommu=pt
 proxmox_backup_file_prefix: pve-etc  # filename prefix of backup files
 proxmox_backup_retention_days: 90  # number of daily backups to retain
 proxmox_backup_systemd_service: pve-config-backup

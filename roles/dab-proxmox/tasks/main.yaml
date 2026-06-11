@@ -179,24 +179,28 @@
     register: uefi_mode
   
   # Modify GRUB config (if booted via MBR)
-  - name: Enable IOMMU in GRUB config
+  - name: Enable IOMMU kernel args in GRUB config
     ansible.builtin.lineinfile:
       path: /etc/default/grub
-      regexp: "^GRUB_CMDLINE_LINUX_DEFAULT="
-      line: GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt"
+      regexp: '^(GRUB_CMDLINE_LINUX_DEFAULT=")(?![^"]*(?:^| ){{ item | regex_escape }}(?: |"))([^"]*)(")$'
+      line: '\1\2 {{ item }}\3'
+      backrefs: true
       backup: yes
+    loop: "{{ proxmox_iommu_kernel_args }}"
     when: not uefi_mode.stat.exists
     notify:
     - Update GRUB
     - Reboot warning
 
-  # Modify UEFI boot image command line - assumes ZFS (if booted UEFI)
-  - name: Enable IOMMU in UEFI cmdline
+  # Modify UEFI boot image command line (if booted UEFI)
+  - name: Enable IOMMU kernel args in UEFI cmdline
     ansible.builtin.lineinfile:
       path: /etc/kernel/cmdline
-      regexp: "^root=ZFS" # maybe not the best check if running EFI+LVM
-      line: root=ZFS=rpool/ROOT/pve-1 boot=zfs intel_iommu=on iommu=pt
+      regexp: '^(?!.*(?:^| ){{ item | regex_escape }}(?: |$))(.*)$'
+      line: '\1 {{ item }}'
+      backrefs: true
       backup: yes
+    loop: "{{ proxmox_iommu_kernel_args }}"
     when: uefi_mode.stat.exists
     notify:
     - Update UEFI

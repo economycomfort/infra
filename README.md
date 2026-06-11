@@ -20,9 +20,11 @@ Thanks to [Alex Kretzschmar](https://github.com/ironicbadger)'s various blog pos
 
 Edit away.
 
-## Claude Code
+## AI-assisted administration
 
-This repo includes a `CLAUDE.md` file for use with [Claude Code](https://claude.ai/code). Useful for tasks like reviewing playbooks, adding new roles, or refactoring variables. Run `make encrypt` before committing — Claude cannot do this for you since it requires the vault password.
+This repo includes an `AGENTS.md` file for AI coding agents. It captures the repo layout, common commands, and vault handling expectations for tasks like reviewing playbooks, adding roles, or refactoring variables.
+
+Run `make encrypt` before committing any vault changes.
 
 ## License
 

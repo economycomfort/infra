@@ -102,23 +102,19 @@
           + ([] if tailscale_routes | length == 0 else ['--advertise-routes=' + (tailscale_routes | join(','))])
         }}
 
-  - name: Join Tailscale options into string
-    set_fact:
-      tailscale_options: "{{ tailscale_options | join(' ') }}"
-
   - name: Show tailscale options
     debug:
       msg: "Tailscale options: {{ tailscale_options }}"
 
   - name: Run tailscale up with auth key if not authenticated
-    ansible.builtin.command: >
-      tailscale up {{ tailscale_options }} --authkey {{ tailscale_authkey }}
+    ansible.builtin.command:
+      argv: "{{ ['tailscale', 'up'] + tailscale_options + ['--auth-key', tailscale_authkey] }}"
     register: tailscale_up_result
     when: tailscale_not_authenticated
-    ignore_errors: true
+    no_log: true
 
   - name: Re-run tailscale up without auth key to apply config (if already logged in)
-    ansible.builtin.command: >
-      tailscale up {{ tailscale_options }}
+    ansible.builtin.command:
+      argv: "{{ ['tailscale', 'up'] + tailscale_options }}"
     when: 
       - not tailscale_not_authenticated

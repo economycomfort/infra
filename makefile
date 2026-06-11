@@ -16,9 +16,6 @@ osint-sandbox:
 tailscale:
 	ansible-playbook tailscale.yaml
 
-deploy:
-	ansible-playbook deploy.yaml
-
 update:
 	ansible-playbook update.yaml
 

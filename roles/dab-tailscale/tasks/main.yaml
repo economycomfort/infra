@@ -56,6 +56,7 @@
   - name: Create systemd override to disable GRO on eth0
     copy:
       dest: /etc/systemd/system/disable-gro-eth0.service
+      mode: "0644"
       content: |
         [Unit]
         Description=Disable GRO on eth0
@@ -71,13 +72,14 @@
     notify: Reload systemd and enable disable-gro
 
   - name: Enable and start disable-gro service
-    systemd:
+    ansible.builtin.systemd:
       name: disable-gro-eth0.service
+      daemon_reload: true
       enabled: yes
       state: started
 
   - name: Ensure the disable-gro service is enabled at boot
-    systemd:
+    ansible.builtin.systemd:
       name: disable-gro-eth0.service
       enabled: yes
 

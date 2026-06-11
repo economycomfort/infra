@@ -32,8 +32,19 @@ BACKUP_SOURCE_LIST=(           # files/folders to be backed up
 )
 
 tmp_file="/tmp/${BACKUP_FILE_PREFIX}-$(date +%Y%m%d-%H%M%S).tar.gz"
+expanded_sources=()
 
-tar --ignore-failed-read --warning=no-file-changed -czf "${tmp_file}" "${BACKUP_SOURCE_LIST[@]}"
+for src in "${BACKUP_SOURCE_LIST[@]}"; do
+  if [[ "$src" == *[\*\?\[]* ]]; then
+    while IFS= read -r match; do
+      expanded_sources+=("$match")
+    done < <(compgen -G "$src")
+  else
+    expanded_sources+=("$src")
+  fi
+done
+
+tar --ignore-failed-read --warning=no-file-changed -czf "${tmp_file}" "${expanded_sources[@]}"
 for i in "${BACKUP_DEST_PATHS[@]}"; do
   cp "${tmp_file}" "$i"
   find "$i" -maxdepth 1 -type f -name "${BACKUP_FILE_PREFIX}-*" -mtime "+${RETAIN_DAYS}" -delete

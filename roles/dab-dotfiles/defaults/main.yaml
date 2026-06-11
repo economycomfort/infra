@@ -1,6 +1,7 @@
 dotfiles_repo: 'https://github.com/economycomfort/dotfiles.git'
-dotfiles_dest: '${HOME}/.dotfiles'
+dotfiles_dest: "{{ '/root' if ansible_user == 'root' else '/home/' ~ ansible_user }}/.dotfiles"
 dotfiles_recursive: yes
 dotfiles_install: "{{ dotfiles_dest }}/install"
+dotfiles_install_marker: "{{ dotfiles_dest }}/.ansible-install-complete"
 dotfiles_chsh: yes
 dotfiles_become: no

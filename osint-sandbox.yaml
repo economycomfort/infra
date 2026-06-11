@@ -1,0 +1,57 @@
+---
+## Builds OSINT sandbox LXC.
+
+  - hosts: osint-sandbox
+    become: true
+    pre_tasks:
+      - name: Import david keys from github
+        ansible.posix.authorized_key:
+          user: david
+          state: present
+          key: https://github.com/economycomfort.keys
+
+      - name: Ensure ai-agent user exists
+        ansible.builtin.user:
+          name: ai-agent
+          shell: /bin/bash
+          groups: sudo
+          append: true
+          create_home: true
+
+      - name: Install ai-agent SSH key
+        ansible.posix.authorized_key:
+          user: ai-agent
+          state: present
+          key: "{{ osint_sandbox_ai_agent_public_key }}"
+
+      - name: Allow ai-agent passwordless sudo
+        ansible.builtin.copy:
+          dest: /etc/sudoers.d/ai-agent
+          content: "ai-agent ALL=(ALL) NOPASSWD:ALL\n"
+          owner: root
+          group: root
+          mode: "0440"
+          validate: "visudo -cf %s"
+
+      - name: Harden SSH daemon
+        ansible.builtin.copy:
+          dest: /etc/ssh/sshd_config.d/99-osint-sandbox-hardening.conf
+          content: |
+            PermitRootLogin no
+            PasswordAuthentication no
+            KbdInteractiveAuthentication no
+          owner: root
+          group: root
+          mode: "0644"
+        notify: Restart ssh
+
+    roles:
+      - role: grog.package
+      - role: dab-motd
+      - role: dab-dotfiles
+
+    handlers:
+      - name: Restart ssh
+        ansible.builtin.service:
+          name: ssh
+          state: restarted

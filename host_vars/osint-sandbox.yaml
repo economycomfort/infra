@@ -1,0 +1,26 @@
+---
+target_os: debian
+ansible_user: david
+ansible_python_interpreter: /usr/bin/python3
+
+osint_sandbox_ai_agent_public_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDmkG+8HcIwAirwBU18L0iVvoR9+cEatdw2wOj/NbYve dbrooks@macbook-pro.vhf.sh"
+
+dotfiles_dest: /home/david/.dotfiles
+dotfiles_recursive: yes
+
+######################
+###  grog.package  ###
+######################
+package_list:
+  - name: ca-certificates
+  - name: curl
+  - name: dnsutils
+  - name: git
+  - name: jq
+  - name: openssh-server
+  - name: python3
+  - name: sudo
+  - name: vim-tiny
+  - name: wget
+  - name: whois
+  - name: zsh

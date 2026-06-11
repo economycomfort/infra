@@ -25,13 +25,14 @@
   - name: Disable clustering services
     ansible.builtin.systemd:
       name: "{{ item }}"
-      state: disabled
+      enabled: false
+      state: stopped
     loop:
       - pve-ha-crm.service
       - pve-ha-lrm.service
       - corosync.service
       #- pvesr.timer # possibly not applicable in Proxmox 7.x+?
-    when: proxmox_clustering == "no"  # default
+    when: not proxmox_clustering | bool  # default
 
   # Set timezone
   - name: Set timezone

@@ -7,3 +7,6 @@ main_gid: "{{ main_uid }}"
 
 # Common vars across all hosts
 common_timezone: US/Eastern
+ansible_managed: >-
+  !!! This file is managed by Ansible - do not update manually. !!!
+  $Ansible {{ template_path | basename + lookup('pipe', 'git log --format=",%h at %cI by %cE" -1 ' + template_fullpath | quote) | default(',UNCOMMITTED', true) }}$
